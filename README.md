@@ -59,9 +59,17 @@ ___
 
  - Ready the documentation, add tags to the code, add event handling and the science package to the code.
  - the README file itself has format issues so I need to learn how to format to my liking.
- - event handling for various error types.
- - Engine power updates to the robot.
- - Engine Impulse delay to the robot.
+ - Better event handling for various error types from nodeJs and the Client side JavaScript.
+ - Engine power updates to the robot. Since the tank treads are a bit quirky this allows the driver to adjust the power to the drive sprocket and just the course of the tank. Otherwise the tank will drive with a curve.
+ - Engine Impulse delay to the robot. The driver can adjust the length of time the command issued is executed on the tank itself.
+ - Create a Data structure that can pass easily between the robot and the client interface.
+ - Better images for the read me. 
+ - A flow diagram describing how the whole product works.
+ - An X-2 vehicle that is more stable hardware wise as the whole X-1 is really "interesting" to manage; not, so something wheeled.
+ - Add a sensor module attachment for servos. arm and camera.
+ 
+
+
 
 
 
