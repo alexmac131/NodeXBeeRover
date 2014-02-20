@@ -5,14 +5,14 @@ A combination of jQuery, nodeJs, Xbee and Arduino. This drives a custom built ro
 
 ## The tank
 
-![alt tag](raw.github.com/alexmac131/NodeXbeeTank/master/images/tank.JPG)
+![alt tag](/ images/tank.JPG)
 
 #### Radio transceiver.
-![alt tag](raw.github.com/alexmac131/NodeXbeeTank/master/images/xBee.JPG)
+![alt tag](/images/xBee.JPG)
 
 
 ## The Interface
-![alt tag](/NodeXbeeTank/master/images/controls.jpg)
+![alt tag](/images/controls.jpg)
 
 
 
