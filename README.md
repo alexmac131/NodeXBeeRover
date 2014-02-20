@@ -1,5 +1,7 @@
-NodeJS - XBee - jQuery - Arduino Tank (still working on a name)
+NodeTank X-1
 ===
+#### What is it?
+A combination of jQuery, nodeJs, Xbee and Arduino. This drives a custom built robot through web page interface around its environment.  This is still experimental and code changes often.
 
 ### Required 
 nodeJS
@@ -8,7 +10,7 @@ node-serial
 Arduino Uno
 Motor Shield
 Xbee Shield and Xbee pair
-Other hardward for a tank
+Other hardware for a tank
 
 ### To Run
 attach the Xbee to the USB port
@@ -24,7 +26,7 @@ should result in the following message
     comm port ready
     connect - localhost:8004/index.html
 
- A typical error results when you get the comm port wrong or the radio transmittor is not attached.
+ A typical error results when you get the comm port wrong or the radio transceiver is not attached.
 
     $ node page.js 
 	done init
@@ -41,11 +43,11 @@ should result in the following message
 
 ### To Do
 
- - Ready the documenation, add tags to the code, add event handling and the science package to the code.
- - the readme itself has format issues so I need to learn how to format to my liking.
+ - Ready the documentation, add tags to the code, add event handling and the science package to the code.
+ - the README file itself has format issues so I need to learn how to format to my liking.
  - event handling for various error types.
  - Engine power updates to the robot.
- - Engine Impluse delay to the robot.
- 
+ - Engine Impulse delay to the robot.
+
 
 
