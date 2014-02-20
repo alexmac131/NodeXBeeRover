@@ -28,3 +28,9 @@ connect - localhost:8004/index.html
 
 
 ### To Do
+
+ - Ready the documenation, add tags to the code, add event handling and the science package to the code.
+ - the readme itself has format issues so I need to learn how to format to my liking.
+
+
+
