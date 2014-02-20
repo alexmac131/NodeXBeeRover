@@ -1,18 +1,12 @@
 #forward, #left, #right, #back, #stop, #status1, #status2, #status3, #status4 {
-        width:150px;
+		width:150px;
         height:150px;
         min-width:150px;
         min-height:150px;
-	position:fixed;
-	align:center;
-	max-height:150px;
-	max-width:150px;
-    	text-align:center;
-	
-}
-
-#stop  {
-        background-color:#820033;
+		position:fixed;
+		text-align:center;
+		max-height:150px;
+		max-width:150px;
 }
 
 #forward, #back, #stop {
@@ -22,10 +16,10 @@
 #left, #status1, #status3 {
 	left:0;
 }
-
 #forward, #status1, #status2  {
 	top:0;
 }
+
 #left, #stop, #right  {
 	top:152;
 }
@@ -33,47 +27,27 @@
 #status2, #status4 ,#right {
 	left:304;
 }
-#status1 {
-    border-radius: 7%; 
-    padding-right:0;
-    font-weight:bold;
-    font-size:2.1em;
-    text-align:center;
-    padding-top:20;
-overflow:hidden;
-}
-
-#status2 {
-    padding-top:20;
-font-weight:bold;font-size:2.1em;
-	
-
-}
-#status3 {
-    font-weight:bold;font-size:2em;
-    text-align:center;
-	text-transform:uppercase;
-margin-top:0;
-margin-bottom:0;
-margin-right:0;
-margin-left:0;
-border:0;
-overflow:hidden;
-padding-top:50;
-
-}
-#status4  {
-    display: inline-block;
-    border-radius: 7%; 
-    padding-left:5;
-    padding-top:5;
-font-weight:bold;font-size:1.1em;
-
-}
 
 #back, #status3, #status4  {
 	top:304;
 }
+
+#status1, #status2, #status3, #status4 {
+	border:0;
+	font-size:1.7em;
+	font-weight:bold;
+	margin-bottom:0;
+	margin-left:0;
+	margin-right:0;
+	margin-top:0;
+	overflow:hidden;
+	padding:5;
+	padding-top:50;    
+	text-transform:uppercase;
+    border-radius: 7%; 
+    text-align:center;
+}    
+
 #enginebox {
 	border:4px solid;
 	text-align:center;
@@ -82,36 +56,35 @@ font-weight:bold;font-size:1.1em;
 	width:100;
 	padding:10;
 	position:absolute;
-        background-color:#26DBD5;
+    background-color:#26DBD5;
 }
 
 #slider-vertical2, #slider-vertical3 {
 	top:10;
 	border:1px solid black;
-        background-color:#111111;
-}
+}    
 #slider-vertical2 {
 	left:14;
 	float:left;
+	background-color:#111111;
 }
 #slider-vertical3 {
 	left:70;
-        background-color:#ff1111;
+    background-color:#ff1111;
 	float:bottom;
 }
-#amount2 {
+#amount2, #amount3 {
 	left:1;
 	bottom:3;
-	float:left;
 	padding:10;
 	padding-top:20;
 }
+
+#amount2 {
+	float:left;
+}
 #amount3 {
-	left:1;
-	bottom:3;
 	float:right;
-	padding:10;
-	padding-top:20;
 }
 
 

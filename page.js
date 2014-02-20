@@ -5,7 +5,7 @@ url     = require("url"),
 filesys = require("fs");  
 eventsA = require("events");
 
-function tankDataInit(aaa) {
+function tankDataInit() {
 	this.lastCommand = "starting";
 	this.status = true;
 	this.heart = false;
@@ -15,26 +15,25 @@ function tankDataInit(aaa) {
 	this.roverData = "";
 	this.leftEngine = 255;
 	this.rightEngine = 255;
-	this.engineImpulse = 100;;
+	this.engineImpulse = 100;
 
 	this.setLastCommand=function(strValue){
-     		this.lastCommand=strValue;
-     	};
+     	this.lastCommand=strValue;
+    };
 	this.getLastCommand = function(){
-     		return this.lastCommand;
-     	};    
+     	return this.lastCommand;
+    };    
 	
 	this.setHeartBeat = function  (strValue) {
 		this.Status = signal;	
 	};
 	this.getHeartBeat = function() {
 		return this.Status;
-        }	
-
+    }	
 
 	this.setRange=function(strValue) {
 		this.range = strValue;
-	};	
+	};
 	this.getRange=function(strValue) {
      		return this.range;
 	}
@@ -44,7 +43,6 @@ function tankDataInit(aaa) {
 	};	
 	this.getAlert=function(strValue) {
      		return this.alert;
-	
 	}
 
 	this.setRoverInfo=function(strValue) {
@@ -52,7 +50,6 @@ function tankDataInit(aaa) {
 	};	
 	this.getRoverInfo=function(strValue) {
      		return this.roverMessage;
-	
 	}
 
 	this.setRoverData=function(strValue) {
@@ -67,16 +64,14 @@ function tankDataInit(aaa) {
 		this.leftEngine= strValue;
 	};	
 	this.getEngineLeft=function(strValue) {
-     		return this.leftEngine;
-	
+     	return this.leftEngine;
 	}
 
 	this.setEngineRight=function(strValue) {
 		this.rightEngine = strValue;
 	};	
 	this.getEngineRight=function(strValue) {
-     		return this.rightEngine;
-	
+     	return this.rightEngine;
 	}
 
 	this.setEngineImpulse = function(strValue) {
@@ -89,13 +84,13 @@ function tankDataInit(aaa) {
 	console.log ("done init");	
 	
 }
-var robotData = new tankDataInit("test");
+var robotData = new tankDataInit();
 var comPort = '/dev/tty.usbserial-A900fwHn';
 var serialport = require("serialport");
 var SerialPort = serialport.SerialPort; // localize object constructor
 
 var sp = new SerialPort(comPort, {
-  parser: serialport.parsers.readline("\n"),
+  parser: serialport.parsers.readline("\r"),
   baudrate: 9600
 });
 
@@ -105,37 +100,35 @@ sp.on("open", function () {
     console.log ("comm port ready");
 });
 
-my_http.createServer(function(request,response){  
+my_http.createServer(function(request,response) {  
  	// parsing paths requested helps give html response
-    	var my_path = url.parse(request.url).pathname;  
-    	var full_path = path.join(process.cwd(),my_path);  
+    var my_path = url.parse(request.url).pathname;  
+    var full_path = path.join(process.cwd(),my_path);  
 	
-    	path.exists(full_path,function(exists) {  
-        	if(!exists) {  
-            		response.writeHeader(404, {"Content-Type": "text/plain"});    
-            		response.write("404 Not Found\n");    
-            		response.end();  
-        	}  
-        	else {  
-            		filesys.readFile(full_path,  function(err, file) {    
-                 		if(err) {    
-                     			response.writeHeader(500, {"Content-Type": "text/plain"});    
-                     			response.write(err + "\n");    
-                     			response.write(full_path + "\n");    
-                     			response.write(file + "\n");    
-                     			response.end();    
-                 		}    
-                 		else {  
+    path.exists(full_path,function(exists) {  
+       	if(!exists) {  
+           		response.writeHeader(404, {"Content-Type": "text/plain"});    
+           		response.write("404 Not Found\n");    
+           		response.end();  
+       	}  
+       	else {             		
+       		filesys.readFile(full_path,  function(err, file) {    
+           		if(err) {    
+                    response.writeHeader(500, {"Content-Type": "text/plain"});    
+           			response.write(err + "\n");    
+                    response.write(full_path + "\n");    
+                    response.write(file + "\n");    
+                    response.end();    
+                 }    
+                 else {  
 					var _get = url.parse(request.url, true).query; 
-                    			response.writeHeader(200);    
-					var getString = JSON.stringify(_get);
-					console.log("url " + getString);
+
+                    response.writeHeader(200);    
+					
 					if (_get.tankData  && !_get.direction) {
-						robotData.setLastCommand(_get.direction);
 						var sendToBrowser = JSON.stringify(robotData);
-						console.log("tank data Event");
 						response.write (sendToBrowser);
-					}
+					}						
 					else if (_get.engineUpDate) {
 						if (_get.engineUpDate == "left") {
 							robotData.setEngineLeft(_get.engine);
@@ -143,40 +136,35 @@ my_http.createServer(function(request,response){
 						else {
 							robotData.setEngineRight(_get.engine);
 						}
-						console.log("engine update");
 						var sendToBrowser = JSON.stringify(robotData);
 						response.write (sendToBrowser);
 					}
 					else if (!_get.stopevent  && _get.direction) {
 						robotData.setLastCommand(_get.direction);
 						var sendToBrowser = JSON.stringify(robotData);
-						console.log ("not stop with get direction");
-						response.write (sendToBrowser );
+						response.write (sendToBrowser);
 					}
 					else if (_get.stopevent == 1) {
-						robotData.setLastCommand(_get.direction)
-						var sendToBrowser = JSON.stringify( {lastCommand:"stop", stopEvent:1} );
-						robotData.setLastCommand(_get.direction);
-						console.log ("stop event ");
+						robotData.setLastCommand("stop")
+						var sendToBrowser = JSON.stringify(robotData );
 						response.write (sendToBrowser);
 					}
 					else {
-				
-						console.log ("HTML event" );
-                    				response.write(file);
+						response.write(file);
 					}
-					console.log("--------");
-                    			response.end();  
-                		}  
+					console.log("xxxxxx->" + sendToBrowser + "<-xxxx\n")
+					response.end();  
+                }  
                        
-            		});  
-       		 }  
-    	});  
+            });  
+       	}  
+    });  
+
  	sp.on('data', function (data) {
 		if (data.length < 1) {
 			return;
 		}
-    		data = data.toString();
+    	data = data.toString();
 		var re = /(ALERT|Rover|data)/i;
 		match = re.exec(data);
 		

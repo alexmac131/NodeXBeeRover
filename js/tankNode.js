@@ -55,11 +55,11 @@ $(function() {
       		value: 60,
       		slide: function( event, ui ) {
         		$( "#amount3" ).text( ui.value );
-			askForDataFromNode ({engine:ui.value,engineUpDate:"right"});
-      		},
-		change: function( event, ui ) {
-			console.log ("slider event");
-		}
+				askForDataFromNode ({engine:ui.value,engineUpDate:"right"});
+		    },
+			change: function( event, ui ) {
+				console.log ("slider event");
+			}
     	});
 	$( "#slider-vertical3" ).on( "slidechange", function( event, ui ) {} ) ;
 
@@ -77,10 +77,8 @@ function changeIndicator (idset, locationImg) {
 	$(idset).attr('src',locationImg);
 }
 
-
-
 var xmlhttp;
-function loadXMLDoc(url,cfunc) {
+function loadXMLDoc(url, cfunc) {
 	if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
   		xmlhttp=new XMLHttpRequest();
   	}
@@ -94,42 +92,45 @@ function loadXMLDoc(url,cfunc) {
 
 function askForDataFromNode(data) {
 	var str = $.param(data);
-	//console.log ("string passed without tank data request is " + str);
 	loadXMLDoc("index.html?" + str ,function() {
   		if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-			// we will want to set a data structure we get from the node control server 	
-			//console.log ("response is " + xmlhttp.responseText );
-			var feedback = JSON.parse( xmlhttp.responseText );
-			$("#status1").text( feedback.range);
-			$("#status2").text( feedback.lastCommand );
-			$("#status3").text( feedback.alert);
-			processFeedBack(feedback);
-    		}
+  			processFeedBack($.parseJSON(xmlhttp.responseText)) ;
+    	}
   	});
 }
 
 function processFeedBack (data) {
-	var strJSON = JSON.stringify(data);
-	console.log ("feedback test " + strJSON );
+	
+	console.log ("\n\ndata test ---->" + data.range 	 + "-----\n\n\n");
+
+	$("#status1").text( data.range);
+	$("#status2").text( data.lastCommand );
 	if (data.alert) {
+		console.log("alert event");
 		$("#status3").css("color", "#FF6802");
 		$("#status1").css("color", "#DE6262");
 		$("#status2").css("color", "#DE6262");
+		$("#status3").text( data.alert);
 		changeIndicator("","");
 		return;
 	}	
-	else if (data.stopEvent == 1) {
+	else if (data.lastCommand == "stop") {
+		console.log("stop event");
+		$("#status2").text( data.lastCommand );
 		$("#status2").css("color", "#DE6262");
 	}
 	else {
+		console.log("regular or default event");
 		$("#status3").css("color", "#000000");
 		$("#status1").css("color", "#000000");
 		$("#status2").css("color", "#000000");
-		console.log ("left engine " , data.leftEngine);
 		$("#slider-vertical2").slider("value",data.leftEngine);
 		$("#slider-vertical3").slider("value", data.rightEngine);
-        	$( "#amount2" ).text(data.leftEngine );
-        	$( "#amount3" ).text(data.rightEngine );
+        $( "#amount2" ).text(data.leftEngine );
+        $( "#amount3" ).text(data.rightEngine );
 	}
-	console.log ("-------  " + data.stopEvent + "---" + data.lastCommand);
+	console.log ("-------  " + data.heart + "---" + data.lastCommand);
+	
+			
+			
 }
