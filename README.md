@@ -1,8 +1,8 @@
 NodeTank X-1
-===
-#### What is it?
+==
+### What is it?
 A combination of jQuery, nodeJs, Xbee and Arduino. This drives a custom built robot through web page interface around its environment.  This is still experimental and code changes often.
-
+_____
 ## The tank
 
 ![alt tag](/images/tank.JPG)
@@ -15,7 +15,7 @@ A combination of jQuery, nodeJs, Xbee and Arduino. This drives a custom built ro
 ![alt tag](/images/controls.jpg)
 
 
-
+______
 ### Required 
 nodeJS
 node-serial
@@ -25,6 +25,7 @@ Motor Shield
 Xbee Shield and Xbee pair
 Other hardware for a tank
 
+_____
 ### To Run
 attach the Xbee to the USB port
 change var comPort = '/dev/tty.usbserial-A900fwHn' to your comport
@@ -53,7 +54,7 @@ should result in the following message
 
 
 
-
+___
 ### To Do
 
  - Ready the documentation, add tags to the code, add event handling and the science package to the code.
