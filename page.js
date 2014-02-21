@@ -152,7 +152,6 @@ my_http.createServer(function(request,response) {
 					else {
 						response.write(file);
 					}
-					console.log("xxxxxx->" + sendToBrowser + "<-xxxx\n")
 					response.end();  
                 }  
                        
@@ -212,9 +211,9 @@ my_http.createServer(function(request,response) {
 		else if (direction == "back") {
 			sendFlag = true;
 		}
-		else if (direction == "stop") {
+		/* else if (direction == "stop") {
 			sendFlag = true;
-		}
+ 		}  do not need this event as we are not on continous drive */
 		else {
 
 
