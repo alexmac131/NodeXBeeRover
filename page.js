@@ -198,6 +198,7 @@ my_http.createServer(function(request,response) {
  	request.on('end', function () { 
 		var _get = url.parse(request.url, true).query; 
 		var direction = new String (  _get.direction).toLowerCase();
+		var engineUpDate = new String (  _get.engineUpdate).toLowerCase();
 		var sendFlag =  false;
 		if (direction == "left") {
 			sendFlag = true;
@@ -211,6 +212,14 @@ my_http.createServer(function(request,response) {
 		else if (direction == "back") {
 			sendFlag = true;
 		}
+		else if (engineUpDate == "left") {
+			sendFlag = true;
+		}
+		else if (engineUpDate == "right") {
+			sendFlag = true;
+		}
+
+
 		/* else if (direction == "stop") {
 			sendFlag = true;
  		}  do not need this event as we are not on continous drive */
