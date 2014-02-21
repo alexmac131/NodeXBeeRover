@@ -7,7 +7,6 @@ const int pingPin = 7;  // pinger
 const int pwm_b = 11;  //PWM control for motor outputs 3 and 4 is on digital pin 11
 const int dir_a = 12;  //direction control for motor outputs 1 and 2 is on digital pin 12
 const int dir_b = 13;  //direction control for motor outputs 3 and 4 is on digital pin 13
-
 const int minRange = 40;
 
 
@@ -31,7 +30,7 @@ void setup() {
   
   analogWrite(pwm_a, 0);  //set both motors to run at (100/255 = 39)% duty cycle (slow)
   analogWrite(pwm_b, 0);
- Serial.begin(9600);
+  Serial.begin(9600);
 }
 
 
@@ -101,11 +100,11 @@ void directionSet (char directon) {
   }  
   char tmp[20];
   
-    String Message  = String (directon) + "," + dtostrf(turnPowerA, 10, 4, tmp) + ","  ;
+  String Message  = String (directon) + "," + dtostrf(turnPowerA, 10, 4, tmp) + ","  ;
     
-    Message =  Message + dtostrf(turnPowerB, 10, 4, tmp) + "," + String(turnDelay);  
-    Message =  "Rover," + Message + "," + String(rangeNow);
-    Serial.println(Message);
+  Message =  Message + dtostrf(turnPowerB, 10, 4, tmp) + "," + String(turnDelay);  
+  Message =  "Rover," + Message + "," + String(rangeNow);
+  Serial.println(Message);
   
   analogWrite(pwm_a, turnPowerA);   
   analogWrite(pwm_b, turnPowerB);
@@ -158,7 +157,6 @@ long microsecondsToCentimeters(long microseconds){
 }
 
 void signalLED  (int color[3]) {
-  
   int  R = (color[0] * 255) / 100 ;
   int  G =  (color[1] * 255 ) /100 ;
   int  B = ( color[2] * 255) / 100 ;
