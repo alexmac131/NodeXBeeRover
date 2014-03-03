@@ -79,19 +79,32 @@ function tankDataInit() {
 	};	
 	this.getEngineImpulse = function(strValue) {
      		return this.engineImpulse;
-	
 	}
 	console.log ("done init");	
 	
 }
+var webPort = 8084;
 var robotData = new tankDataInit();
 var comPort = '/dev/tty.usbserial-A900fwHn';
 var serialport = require("serialport");
 var SerialPort = serialport.SerialPort; // localize object constructor
 
+try { 
 var sp = new SerialPort(comPort, {
   parser: serialport.parsers.readline("\r"),
-  baudrate: 9600
+  baudrate: 9600,
+  error: function( er, messsage) { 
+  		console.log("error " + err + "\n" + "message" + message);ß
+  }
+});
+}
+catch(er) {
+	console.log("error com port likely the XBEE is not attached");
+}
+
+
+sp.on("error", function (error) {
+	console.log("error alex" + error);
 });
 
 sp.on("open", function () {
@@ -115,9 +128,8 @@ my_http.createServer(function(request,response) {
        		filesys.readFile(full_path,  function(err, file) {    
            		if(err) {    
                     response.writeHeader(500, {"Content-Type": "text/plain"});    
-           			response.write(err + "\n");    
-                    response.write(full_path + "\n");    
-                    response.write(file + "\n");    
+           			response.write("please select a project\n");    
+                    response.write("The is the base directory for all.\n");    
                     response.end();    
                  }    
                  else {  
@@ -126,10 +138,13 @@ my_http.createServer(function(request,response) {
                     response.writeHeader(200);    
 					
 					if (_get.tankData  && !_get.direction) {
+						console.log ("tank data request for browser")
 						var sendToBrowser = JSON.stringify(robotData);
+						console.log(sendToBrowser)
 						response.write (sendToBrowser);
 					}						
 					else if (_get.engineUpDate) {
+						console.log("engineUpdate");
 						if (_get.engineUpDate == "left") {
 							robotData.setEngineLeft(_get.engine);
 						}
@@ -140,11 +155,13 @@ my_http.createServer(function(request,response) {
 						response.write (sendToBrowser);
 					}
 					else if (!_get.stopevent  && _get.direction) {
+						console.log("direction request");
 						robotData.setLastCommand(_get.direction);
 						var sendToBrowser = JSON.stringify(robotData);
 						response.write (sendToBrowser);
 					}
 					else if (_get.stopevent == 1) {
+						console.log("stop event");
 						robotData.setLastCommand("stop")
 						var sendToBrowser = JSON.stringify(robotData );
 						response.write (sendToBrowser);
@@ -159,26 +176,30 @@ my_http.createServer(function(request,response) {
        	}  
     });  
 
- 	sp.on('data', function (data) {
-		if (data.length < 1) {
+ 	sp.on('data', function (arduinoData) {
+
+ 		console.log("\n\n\n----\ntest serial from Arduino \n------ \n\n\n")
+		if (arduinoData.length < 1) {
 			return;
 		}
-    	data = data.toString();
+    	var ArduinoString = arduinoData.toString();
 		var re = /(ALERT|Rover|data)/i;
-		match = re.exec(data);
+		var match = re.exec(ArduinoString);
+		console.log ("data recieved ->" + ArduinoString + "<- aaa ");
+		console.log ("data recieved ->" + arduinoData + "<- aaa ");
 		
 		if (match) {
 			matchResults = match[0].toLowerCase();
 			if (matchResults == "alert") {
-				var splitResults = data.split(",");
+				var splitResults = ArduinoString.split(",");
 				//console.log("Alert  data " + splitResults.length +  "  " + data);
 				robotData.setAlert(splitResults[1]);
 				robotData.setRange(splitResults[2]);
 			}
 			else if (matchResults == "rover") {
-				var splitResults = data.split(",");
-				//console.log("rover data " + splitResults.length +  "  " + data);
-				robotData.setRoverInfo(data);
+				var splitResults = ArduinoString.split(",");
+				console.log("rover data " + splitResults.length +  "  " + ArduinoString);
+				robotData.setRoverInfo(ArduinoString);
 				robotData.setLastCommand(splitResults[1]);
 				robotData.setRange(splitResults[5]);
 				robotData.setEngineLeft(splitResults[2]);
@@ -187,7 +208,7 @@ my_http.createServer(function(request,response) {
 				robotData.setAlert("");
 			}
 			else if (matchResults == "data") {
-				robotData.setRoverData(data);
+				robotData.setRoverData(ArduinoString);
 			}
 			else {
 				//console.log("->unmatched data ", match[0], data);
@@ -196,51 +217,41 @@ my_http.createServer(function(request,response) {
 
   	});
  	request.on('end', function () { 
+ 		//console.log ("------\nparsing the data\n___________\n");
+
+		//var _get = url.parse(request.url); //, true).query; 
 		var _get = url.parse(request.url, true).query; 
-		var direction = new String (  _get.direction).toLowerCase();
-		var engineUpDate = new String (  _get.engineUpdate).toLowerCase();
-		var sendFlag =  false;
-		if (direction == "left") {
-			sendFlag = true;
+		var sendToArduino = "";	
+		if (_get.direction) {
+			console.log ("direction ---------- " + _get.direction);
+			sendToArduino = new String (  _get.direction).toLowerCase();
+			robotData.setLastCommand(sendToArduino);
+		}	
+		else if (_get.engineUpdate) {
+			//console.log ("engineUpdate");
+			sendToArduino = new String (  _get.engineUpdate).toLowerCase();
 		}
-		else if (direction == "right") {
-			sendFlag = true;
+		else if (_get.tankData) {
+			console.log("tankData xxxxxxxxxxx");
+			sendToArduino =  new String ("tankData").toLowerCase() + "\r";
 		}
-		else if (direction == "forward") {
-			sendFlag = true;
-		}
-		else if (direction == "back") {
-			sendFlag = true;
-		}
-		else if (engineUpDate == "left") {
-			sendFlag = true;
-		}
-		else if (engineUpDate == "right") {
-			sendFlag = true;
-		}
-
-
-		/* else if (direction == "stop") {
-			sendFlag = true;
- 		}  do not need this event as we are not on continous drive */
 		else {
-
-
+			//console.log ("aaaa no data");
+			return;
 		}
-		if (sendFlag) {
-			//console.log ("sending ... we hope ..." + direction);
-			robotData.setLastCommand(direction);
-			sp.write(direction , function(err, results) {
-				sp.drain(function(err, result){
-					//console.log ("drain");
-    					//console.log(err, result);
-				});
-				//console.log ("results -> " + results);
-  			});
-		}
+
+		//console.log ("sending ... we hope.  ->> " + sendToArduino + "<--- ");
+		sendToArduino = sendToArduino + "\r";
+		sp.write(sendToArduino , function(err, results) {
+			sp.drain(function(err, result){
+				console.log ("drain " + sendToArduino);
+				//console.log(err, result);
+			});
+			//console.log ("results -> " + results);
+		});
     }); 
-}).listen(8084);  
-sys.puts("Server Running on 8084");           
+}).listen(webPort);  
+sys.puts("Server Running on " + webPort);           
 
 
 
