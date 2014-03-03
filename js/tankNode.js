@@ -28,7 +28,7 @@ $(function() {
       drawScannerData();
     }); 
 
-    $("#slider-impulse").slider({
+    $("#slider-impulseH").slider({
   		orientation: "hortizonal",
   		range: "min",
   		min: 300,
@@ -37,7 +37,7 @@ $(function() {
   		value: 500,
   		slide: function( event, ui ) {
     		$( "#engineI" ).text( ui.value );
-			  askForDataFromNode ({engine:ui.value,engineUpDate:"left"});
+			  askForDataFromNode ({engine:ui.value,engineUpDate:"power"});
   		},
 		  change: function( event, ui ) {
 			 $( "#engineI" ).text( ui.value );
@@ -113,6 +113,7 @@ function askForDataFromNode(data) {
 function processFeedBack (data) {
 	$("#status1").text( data.range);
 	$("#status2").text( data.lastCommand );
+
 	if (data.alert) {
     console.log ("test alert");
 		$("#status1,#status2,#status3, #status4").css("color", "#FF6802");
@@ -131,6 +132,7 @@ function processFeedBack (data) {
 		$("#slider-vertical2").slider("value",data.leftEngine);
 		$("#slider-vertical3").slider("value", data.rightEngine);
 	}
+  
   $("#engineL").text(data.leftEngine);
   $("#engineR").text(data.rightEngine);
   $("#engineI").text(data.engineImpulse);

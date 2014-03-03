@@ -138,15 +138,18 @@ my_http.createServer(function(request,response) {
                     response.writeHeader(200);    
 					
 					if (_get.tankData  && !_get.direction) {
-						console.log ("tank data request for browser")
+						//console.log ("tank data request for browser")
 						var sendToBrowser = JSON.stringify(robotData);
-						console.log(sendToBrowser)
+						//console.log(sendToBrowser)
 						response.write (sendToBrowser);
 					}						
 					else if (_get.engineUpDate) {
-						console.log("engineUpdate");
+						//console.log("engineUpdate");
 						if (_get.engineUpDate == "left") {
 							robotData.setEngineLeft(_get.engine);
+						}
+						else if (_get.engineUpDate == "power"){
+							robotData.setEngineImpulse(_get.engine);	
 						}
 						else {
 							robotData.setEngineRight(_get.engine);
@@ -155,13 +158,13 @@ my_http.createServer(function(request,response) {
 						response.write (sendToBrowser);
 					}
 					else if (!_get.stopevent  && _get.direction) {
-						console.log("direction request");
+						//console.log("direction request");
 						robotData.setLastCommand(_get.direction);
 						var sendToBrowser = JSON.stringify(robotData);
 						response.write (sendToBrowser);
 					}
 					else if (_get.stopevent == 1) {
-						console.log("stop event");
+						//console.log("stop event");
 						robotData.setLastCommand("stop")
 						var sendToBrowser = JSON.stringify(robotData );
 						response.write (sendToBrowser);
@@ -178,15 +181,15 @@ my_http.createServer(function(request,response) {
 
  	sp.on('data', function (arduinoData) {
 
- 		console.log("\n\n\n----\ntest serial from Arduino \n------ \n\n\n")
+ 		//console.log("\n\n\n----\ntest serial from Arduino \n------ \n\n\n")
 		if (arduinoData.length < 1) {
 			return;
 		}
     	var ArduinoString = arduinoData.toString();
 		var re = /(ALERT|Rover|data)/i;
 		var match = re.exec(ArduinoString);
-		console.log ("data recieved ->" + ArduinoString + "<- aaa ");
-		console.log ("data recieved ->" + arduinoData + "<- aaa ");
+		//console.log ("data recieved ->" + ArduinoString + "<- aaa ");
+		//console.log ("data recieved ->" + arduinoData + "<- aaa ");
 		
 		if (match) {
 			matchResults = match[0].toLowerCase();
@@ -223,7 +226,7 @@ my_http.createServer(function(request,response) {
 		var _get = url.parse(request.url, true).query; 
 		var sendToArduino = "";	
 		if (_get.direction) {
-			console.log ("direction ---------- " + _get.direction);
+			//console.log ("direction ---------- " + _get.direction);
 			sendToArduino = new String (  _get.direction).toLowerCase();
 			robotData.setLastCommand(sendToArduino);
 		}	
@@ -232,7 +235,7 @@ my_http.createServer(function(request,response) {
 			sendToArduino = new String (  _get.engineUpdate).toLowerCase();
 		}
 		else if (_get.tankData) {
-			console.log("tankData xxxxxxxxxxx");
+			//console.log("tankData xxxxxxxxxxx");
 			sendToArduino =  new String ("tankData").toLowerCase() + "\r";
 		}
 		else {
@@ -244,7 +247,7 @@ my_http.createServer(function(request,response) {
 		sendToArduino = sendToArduino + "\r";
 		sp.write(sendToArduino , function(err, results) {
 			sp.drain(function(err, result){
-				console.log ("drain " + sendToArduino);
+				//console.log ("drain " + sendToArduino);
 				//console.log(err, result);
 			});
 			//console.log ("results -> " + results);
