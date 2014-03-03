@@ -24,12 +24,15 @@ Driving panel, engine power (left and right), Ultra Sonic radar map.
 
 ______
 ### Required 
+
+You need a serial device attached in order to run the nodeJS server otherwise the Serial code will not run.  Needless to say you will need a Arduino Tank (instructions not included) but you can look here [Arduino Tank](http://www.instructables.com/id/Little-Tank-ArduinoPicaxeTamiya-platform-las/) for suggestions.
+
 nodeJS
 node-serial
 
-Arduino Uno
-Motor Shield
-Xbee Shield and Xbee pair
+Arduino Uno [Arduino Uno](http://arduino.cc/en/Main/ArduinoBoardUno#.UxS-e3lBRqg)
+Motor Shield [Motor Shield](https://www.sparkfun.com/products/9815)
+Xbee Shield and Xbee pair [Xbee](https://www.sparkfun.com/categories/223)
 Other hardware for a tank
 
 _____
