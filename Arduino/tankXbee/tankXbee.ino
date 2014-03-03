@@ -18,8 +18,10 @@ RoverData robot;
 void setup() {
   pinMode(pwm_a, OUTPUT);  //Set control pins to be outputs
   pinMode(pwm_b, OUTPUT);
+  
   pinMode(dir_a, OUTPUT);
   pinMode(dir_b, OUTPUT);
+  
   Serial.begin(9600);
   Serial.println("-----------");
   Serial.println("setup test ");
@@ -49,13 +51,13 @@ void directionSet (char direct) {
       digitalWrite(dir_a, HIGH);  
       digitalWrite(dir_b, HIGH);  
       if (direct == 'L') {
-      robot.turnPowerA = 190;
-      robot.turnPowerB = 40;
+      robot.turnPowerA = 150;
+      robot.turnPowerB = 100;
       robot.turnDelay = 290;
       } else {
         robot.turnPowerA = 150;
         robot.turnPowerB = 150;
-        robot.turnDelay = 2290;
+        robot.turnDelay = 1000;
       }
       runCommand = true;
   }
@@ -63,13 +65,13 @@ void directionSet (char direct) {
       digitalWrite(dir_a, LOW); 
       digitalWrite(dir_b, LOW); 
       if (direct == 'R') {    
-        robot.turnPowerA = 190;
-        robot.turnPowerB = 40;
+        robot.turnPowerA = 150;
+        robot.turnPowerB = 100;
         robot.turnDelay = 290;
       } else {
           robot.turnPowerA = 150;
           robot.turnPowerB = 150;
-          robot.turnDelay = 1290;
+          robot.turnDelay = 1000;
       }
       runCommand = true;      
   }
@@ -80,9 +82,9 @@ void directionSet (char direct) {
   if (!runCommand) {
      return;
   }
-  //Serial.println("command building now and data ");
+   Serial.println("command building now and data ");
   analogWrite(pwm_a, (robot.turnPowerA));   
-  analogWrite(pwm_b, robot.turnPowerB);
+  analogWrite(pwm_b, (robot.turnPowerB));
   delay(robot.turnDelay); // this controls how long the command is excuted before we return control 
   analogWrite(pwm_a, 0);   
   analogWrite(pwm_b, 0);
