@@ -1,7 +1,7 @@
-NodeTank X-1
+NodeTank X-1 0.04
 ==
 ### What is it?
-This is an experiment where nodeJs acts as a middleware between the UI controler and other services on the back end while the user drives the robot.  The nodeJS server could also attach other services to aid the rover, collect data, etc.
+This is an experiment where nodeJs acts as a middleware between the UI controller and other services on the back end while the user drives the robot.  The nodeJS server could also attach other services to aid the rover, collect data, etc.
 
 A combination of jQuery, nodeJs, Xbee and Arduino. This drives a custom built robot through web page interface around its environment.  This is still experimental and code changes often.
 
@@ -10,14 +10,14 @@ This is my first project I am sharing on GitHub, so please be patient.
 _____
 ## The tank
 
-![alt tag](/images/tank.JPG)
+![The tank](/images/tank.JPG)
 
 #### Radio transceiver.
-![alt tag](/images/xBee.JPG)
+![Xbee Transceiver ](/images/xBee.JPG)
 
 
 ## The Interface
-![alt tag](/images/controls2TankWeb.jpg)
+![Web Interface ](/images/controls2TankWeb.jpg)
 
 Left to Right.
 Driving panel, engine power (left and right), Ultra Sonic radar map.
