@@ -153,6 +153,8 @@ function drawScannerData () {
     //console.log(responsePoints);
     var dataList = responsePoints.split(/:{1,}/);
     for (i=0; i < dataList.length; i = i + 3) {
+      ctx.strokeStyle = '#0000ff';
+      ctx.lineWidth = 10;
       var grid = dataList[i].split (/,/);
       range = (grid[0] / 1.6);
       if (!parseInt(range)) {
@@ -166,10 +168,50 @@ function drawScannerData () {
       //console.log("--->" + x_new + " y---->" + y_new);
       ctx.lineTo(x_new,y_new);
     }
+
     ctx.closePath();
     ctx.stroke();
-    ctx.fillStyle="light green";
+    ctx.fillStyle="pink";
+    ctx.fill();
+/*
+ for (x = 0; x < dataList.length; x = x + 3) {
+      var grid = dataList[x].split (/,/);
+      ctx.strokeStyle = '#00FF00';
+      ctx.lineWidth = 10;
+      range = (grid[0] / 5.6);
+      if (!parseInt(range)) {
+            continue;
+      }
+      degree = grid[1];
+      degree = degree * (3.142 / 180);
+      var x_new = range * Math.cos(degree);
+      var y_new = 250 - Math.sqrt ( (range * range) - (x_new * x_new));
+      var x_new = x_new + 150;
+      //console.log("--->" + x_new + " y---->" + y_new);
+      ctx.lineTo(x_new,y_new);
+    }
+    ctx.closePath();
+    */
+    ctx.stroke();
+    ctx.fillStyle="grey";
 ctx.fill();
+
+
+ctx.beginPath();
+ctx.strokeStyle = '#ff0000';
+ ctx.lineWidth = 10;
+ctx.arc(200,250,240,0,2*Math.PI);
+
+ctx.stroke();
+
+ctx.beginPath();
+ctx.strokeStyle = '#00ff00';
+ ctx.lineWidth = 10;
+ctx.arc(260,250,240,0,2*Math.PI);
+
+ctx.stroke();
+
+
 
   });
 }
