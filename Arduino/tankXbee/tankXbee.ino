@@ -1,3 +1,6 @@
+#include <Servo.h>
+Servo myservo;
+
 const int pwm_a = 3;   //PWM control for motor outputs 1 and 2 is on digital pin 3
 const int pwm_b = 11;  //PWM control for motor outputs 3 and 4 is on digital pin 11
 const int pingPin = 7;  // pinger
@@ -5,17 +8,22 @@ const int dir_a = 12;  //direction control for motor outputs 1 and 2 is on digit
 const int dir_b = 13;  //direction control for motor outputs 3 and 4 is on digital pin 13
 const int minRange = 40;
 
+
 struct robotState {
+ 
  unsigned int turnPowerA;
  unsigned int  turnPowerB;
  unsigned int  turnDelay;
  unsigned int range;
+ int RangeArray[25];
+ String rangeData;
  String lastCommand;
 };
 typedef struct robotState RoverData;
 RoverData robot;
 
 void setup() {
+  myservo.attach(10);
   pinMode(pwm_a, OUTPUT);  //Set control pins to be outputs
   pinMode(pwm_b, OUTPUT);
   
@@ -38,8 +46,27 @@ void loop () {
 }
 
 void directionSet (char direct) { 
+  
+  int pos = 0;
+  //myservo.write(90);
+  //delay(19000);
+  Serial.println(direct);
+  int count = 0;
+  for(pos = 25; pos < 155; pos += 5)  // goes from 0 degrees to 180 degrees 
+  {                  
+    // in steps of 1 degree 
+    Serial.print(pos);
+     Serial.print(" ");
+    myservo.write(pos);     // tell servo to go to position in variable 'pos' 
+    robot.RangeArray[count]  = pingArea ();
+    Serial.println(robot.RangeArray[count]);
+    delay(500);
+    count++; 
+  } 
+  
+
+  robot.range = robot.RangeArray[12];    
  
-  robot.range = pingArea ();
   if (robot.range <= minRange && direct == 'F') {
     Serial.println ("ALERT,Sonar, "+ String(robot.range));
     return;
@@ -116,7 +143,7 @@ boolean checkForCommands () {
   String  commandString = ""; 
   boolean stringCommandComplete = false;  
     
-
+  
 
   while (Serial.available()) {
       char inChar = Serial.read();
@@ -140,6 +167,7 @@ boolean checkForCommands () {
   
   robot.lastCommand = commandString;
   //commandString.toLowerCase();
+ Serial.println(commandString);
   if (commandString == "left") {
         directionSet('L');
         return true;      
@@ -175,6 +203,17 @@ void sendBackData () {
   Serial.println(robot.turnDelay);
   Serial.println("Data End ");
  */ 
+ 
+  Serial.print("radar,");
+  for (int c = 0; c < 25; c++) {
+    // r obot.rangeData .=  212,22,2,222,22252,2424521,11
+    Serial.print(robot.RangeArray[c]);
+    
+    if (c < 24) {
+     Serial.print(",");
+    }  
+  }
+  Serial.println();
   
   String Message  =  "rover," + robot.lastCommand + "," + String(robot.turnPowerA)  + "," + String(robot.turnPowerB) + "," + String(robot.turnDelay) + "," + String(robot.range);
   Serial.println(Message);  
