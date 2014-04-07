@@ -63,7 +63,7 @@ void directionSet (char direct) {
     delay(500);
     count++; 
   } 
-  
+   myservo.write(90);
 
   robot.range = robot.RangeArray[12];    
  
@@ -186,6 +186,7 @@ boolean checkForCommands () {
   }
   else if (commandString == "tankdata") {
         sendBackData ();
+        sendRadarData();
         return true;
   }
   else {
@@ -194,17 +195,8 @@ boolean checkForCommands () {
   return false;
 }
 
-void sendBackData () {
-  /* Serial.println("Data start");
-  Serial.println(robot.lastCommand);
-  Serial.println(robot.turnPowerA);
-  Serial.println(robot.turnPowerB);
-  Serial.println(robot.range);
-  Serial.println(robot.turnDelay);
-  Serial.println("Data End ");
- */ 
- 
-  Serial.print("radar,");
+void sendRadarData () {
+   Serial.print("radar,");
   for (int c = 0; c < 25; c++) {
     // r obot.rangeData .=  212,22,2,222,22252,2424521,11
     Serial.print(robot.RangeArray[c]);
@@ -214,7 +206,10 @@ void sendBackData () {
     }  
   }
   Serial.println();
-  
+}
+
+void sendBackData () {
   String Message  =  "rover," + robot.lastCommand + "," + String(robot.turnPowerA)  + "," + String(robot.turnPowerB) + "," + String(robot.turnDelay) + "," + String(robot.range);
   Serial.println(Message);  
+  
 }
