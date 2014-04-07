@@ -16,6 +16,7 @@ function tankDataInit() {
 	this.leftEngine = 255;
 	this.rightEngine = 255;
 	this.engineImpulse = 100;
+	this.radarData = "";
 
 	this.setLastCommand=function(strValue){
      	this.lastCommand=strValue;
@@ -23,6 +24,16 @@ function tankDataInit() {
 	this.getLastCommand = function(){
      	return this.lastCommand;
     };    
+
+    this.setRadarData=function(strValue){
+    	console.log("reading roverdata" + strValue);
+     	this.radarData=strValue;
+    };
+	this.getRadarData = function(){
+		console.log("getting radar data");
+     	return this.radarData;
+    };    
+
 	
 	this.setHeartBeat = function  (strValue) {
 		this.Status = signal;	
@@ -186,7 +197,7 @@ my_http.createServer(function(request,response) {
 			return;
 		}
     	var ArduinoString = arduinoData.toString();
-		var re = /(ALERT|Rover|data)/i;
+		var re = /(ALERT|Rover|data|radar)/i;
 		var match = re.exec(ArduinoString);
 		//console.log ("data recieved ->" + ArduinoString + "<- aaa ");
 		//console.log ("data recieved ->" + arduinoData + "<- aaa ");
@@ -209,6 +220,9 @@ my_http.createServer(function(request,response) {
 				robotData.setEngineRight(splitResults[3]);
 				robotData.setEngineImpulse(splitResults[4]);
 				robotData.setAlert("");
+			}
+			else if (matchResults == "radar") {
+				robotData.setRadarData(ArduinoString);
 			}
 			else if (matchResults == "data") {
 				robotData.setRoverData(ArduinoString);
@@ -238,6 +252,11 @@ my_http.createServer(function(request,response) {
 			//console.log("tankData xxxxxxxxxxx");
 			sendToArduino =  new String ("tankData").toLowerCase() + "\r";
 		}
+		else if (_get.radarData) {
+			//console.log("radardata xxxxxxxxxxx");
+			sendToArduino =  new String ("radardata").toLowerCase() + "\r";
+		}
+
 		else {
 			//console.log ("aaaa no data");
 			return;
