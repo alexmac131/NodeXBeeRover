@@ -1,4 +1,3 @@
-
 $(function() {
 	event.preventDefault();
     $("#forward").click(function(){
@@ -25,7 +24,7 @@ $(function() {
 		changeIndicator("", "");
       askForDataFromNode ({color:"#ffffff",direction:"stop", stopevent:1});
       askForDataFromNode  ({tankData:1});
-      drawScannerData();
+
     }); 
 
     $("#slider-impulseH").slider({
@@ -111,12 +110,12 @@ function askForDataFromNode(data) {
 }
 
 function processFeedBack (data) {
+
 	$("#status1").text( data.range);
 	$("#status2").text( data.lastCommand );
 
-	if (data.alert) {
-    console.log ("test alert");
-		$("#status1,#status2,#status3, #status4").css("color", "#FF6802");
+  if (data.alert) {
+  	$("#status1,#status2,#status3, #status4").css("color", "#FF6802");
 		$("#status3").text( data.alert);
 		changeIndicator("","");
 		return;
@@ -127,7 +126,6 @@ function processFeedBack (data) {
 		$("#status2,#status1").css("color", "#DE6262");
 	}
 	else {
-		console.log("regular or default event");
 		$("#status1,#status2,#status3").css("color", "#000000");
 		$("#slider-vertical2").slider("value",data.leftEngine);
 		$("#slider-vertical3").slider("value", data.rightEngine);
@@ -138,82 +136,50 @@ function processFeedBack (data) {
   $("#engineI").text(data.engineImpulse);
   $("#rangeD").text(data.range);
 
+   drawScannerData(data.radarData);
+
 }
 
-function drawScannerData () {
-  var c =document.getElementById("myCanvas");
+function drawScannerData (data) {
+  var c = document.getElementById("myCanvas");
   var dataList = new Array();
-  var daaa = new Array();
+  var ctx = c.getContext("2d");
 
-  $("#myCanvas").load("rawdata.txt", function(responsePoints) {
-     var ctx = c.getContext("2d");
-    ctx.beginPath();
-    responsePoints = responsePoints.replace(/\r|\n/g, ":");
-    responsePoints = responsePoints.replace(/\s+/g,'');
-    //console.log(responsePoints);
-    var dataList = responsePoints.split(/:{1,}/);
-    for (i=0; i < dataList.length; i = i + 3) {
-      ctx.strokeStyle = '#0000ff';
-      ctx.lineWidth = 10;
-      var grid = dataList[i].split (/,/);
-      range = (grid[0] / 1.6);
-      if (!parseInt(range)) {
-            continue;
-      }
-      degree = grid[1];
+  var baseX = 220;
+  var baseY = 330;
+  var baseRatio = 1.15;
+  ctx.beginPath();
+  dataList = data.split(/,/);
+  ctx.lineTo(baseX,baseY);
+  for (i= 1; i <= dataList.length; i++) {  
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1;
+      range = (dataList[i] * baseRatio);
+      degree = 25 + (i * 5);
+      console.log(i + "  ---- " + range + " " + degree);
       degree = degree * (3.142 / 180);
       var x_new = range * Math.cos(degree);
-      var y_new = 250 - Math.sqrt ( (range * range) - (x_new * x_new));
-      var x_new = x_new + 230;
+      var y_new = baseY - Math.sqrt ( (range * range) - (x_new * x_new));
+      var x_new = x_new + baseX;
       //console.log("--->" + x_new + " y---->" + y_new);
       ctx.lineTo(x_new,y_new);
-    }
+   }    
+   ctx.lineTo(baseX,baseY);
 
     ctx.closePath();
-    ctx.stroke();
-    ctx.fillStyle="pink";
-    ctx.fill();
-/*
- for (x = 0; x < dataList.length; x = x + 3) {
-      var grid = dataList[x].split (/,/);
-      ctx.strokeStyle = '#00FF00';
-      ctx.lineWidth = 10;
-      range = (grid[0] / 5.6);
-      if (!parseInt(range)) {
-            continue;
-      }
-      degree = grid[1];
-      degree = degree * (3.142 / 180);
-      var x_new = range * Math.cos(degree);
-      var y_new = 250 - Math.sqrt ( (range * range) - (x_new * x_new));
-      var x_new = x_new + 150;
-      //console.log("--->" + x_new + " y---->" + y_new);
-      ctx.lineTo(x_new,y_new);
-    }
-    ctx.closePath();
-    */
     ctx.stroke();
     ctx.fillStyle="grey";
-ctx.fill();
+    ctx.fill();
+    ctx.stroke();
 
-
-ctx.beginPath();
-ctx.strokeStyle = '#ff0000';
- ctx.lineWidth = 10;
-ctx.arc(200,250,240,0,2*Math.PI);
-
-ctx.stroke();
-
-ctx.beginPath();
-ctx.strokeStyle = '#00ff00';
- ctx.lineWidth = 10;
-ctx.arc(260,250,240,0,2*Math.PI);
-
-ctx.stroke();
+    ctx.fillStyle = '#ff0000';
+    ctx.fillRect(baseX - (10 *baseRatio),baseY-(50*baseRatio),(10 * baseRatio),(20*baseRatio));
+    ctx.stroke();
 
 
 
-  });
+
+
 }
 
 });
