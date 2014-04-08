@@ -59,7 +59,7 @@ void directionSet (char direct) {
     // Serial.print(" ");
     myservo.write(pos);     // tell servo to go to position in variable 'pos' 
     robot.RangeArray[count]  = pingArea ();
-    delay(500);
+    delay(850);
     //Serial.println(robot.RangeArray[count]);
     count++; 
   } 
@@ -120,12 +120,15 @@ void directionSet (char direct) {
 
 unsigned int pingArea(){
   long duration, cm;
+  
   pinMode(pingPin, OUTPUT);   // clear the eyes
   digitalWrite(pingPin, LOW);
   delayMicroseconds(2);
+  
   digitalWrite(pingPin, HIGH); // look 
   delayMicroseconds(5);
   digitalWrite(pingPin, LOW);
+  
   pinMode(pingPin, INPUT);  // listen
   duration = pulseIn(pingPin, HIGH);
   cm = microsecondsToCentimeters(duration);
