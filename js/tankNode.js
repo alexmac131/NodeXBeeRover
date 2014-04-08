@@ -147,22 +147,33 @@ function drawScannerData (data) {
   var dataList = new Array();
   var ctx = c.getContext("2d");
 
-  var baseX = 220;
-  var baseY = 330;
-  var baseRatio = .80;
+  var baseX = 232;
+  var baseY = 400;
+  var baseRatio = .9;
   ctx.beginPath();
   dataList = data.split(/,/);
   ctx.lineTo(baseX,baseY);
-  for (i= 1; i < dataList.length; i++) {  
+  for (i= 1; i < dataList.length; i++) { 
+      var quad = 1;
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 1;
       range = (dataList[i] * baseRatio);
       degree = 25 + (i * 5);
+      if (degree > 90) {
+        degree = 180 - degree;
+        quad  = 2
+      }
       console.log(i + "  ---- " + range + " " + degree);
-      degree = degree * (3.142 / 180);
-      var x_new = range * Math.cos(degree);
+      radian = degree * (3.142 / 180);
+      var x_new = range * Math.cos(radian);
       var y_new = baseY - Math.sqrt ( (range * range) - (x_new * x_new));
-      var x_new = x_new + baseX;
+
+      if (quad === 2) {
+          x_new = x_new + baseX;   
+      }
+      else {
+        x_new = baseX - x_new;
+      }
       //console.log("--->" + x_new + " y---->" + y_new);
       ctx.lineTo(x_new,y_new);
    }    
@@ -177,10 +188,94 @@ function drawScannerData (data) {
     ctx.fillStyle = '#ff0000';
     ctx.fillRect(baseX - (10 *baseRatio),baseY-(50*baseRatio),(10 * baseRatio),(20*baseRatio));
     ctx.stroke();
+    var colors = [
+      "#ff0000",
+      "#ff0000",
+      "#000000",
+      "#ff0000",
+      "#000000",
+      "#ff0000",
+      "#000000",
+      "#ff0000",
+      "#000000",  //65
+      "#ff0000",
+      "#000000",
+      "#ffff00",
+      "#ff00ff",
+      "#ffffff", //90
+      "#ff00ff",
+      "#ffff00",
+      "#ffff00",
+      "#ff0000",
+      "#000000",
+      "#ff0000",
+      "#000000",
+      "#ff0000",
+      "#000000",
+      "#ff0000",
+      "#000000",
+      "#ff0000" 
+    ];
+
+
+       
+
+    
+      
+for (i= 1; i < dataList.length; i++) {  
+        quad = 1;
+      ctx.strokeStyle = colors[i] ;
+      ctx.lineWidth = 3;
+      range = (dataList[i] * baseRatio);
+      degree = 25 + (i * 5);
+      if (degree % 2 ) {
+        continue;
+      }
+      if (degree > 90) {
+        degree = 180 - degree;
+        quad  = 2
+      }
+      console.log("count " +i + "degree " + degree + " color " + colors[i] + " range " + range);
+      radian = degree * (3.142 / 180);
+      var x_new = range * Math.cos(radian);
+      var y_new = baseY - Math.sqrt ( (range * range) - (x_new * x_new));
+
+      if (quad === 2) {
+          x_new = x_new + baseX;   
+      }
+      else {
+        x_new = baseX - x_new;
+      }
+      ctx.beginPath();
+      ctx.moveTo(baseX, baseY);
+      ctx.lineTo(x_new, y_new);
+      ctx.stroke();
+   }  
 
 
 
+      var range = 400;
+      radian = 30 * (3.142 / 180);
+      var x_new = range * Math.cos(radian);
+      
+      var y_new = baseY - Math.sqrt ( (range * range) - (x_new * x_new));
+      ctx.strokeStyle = "#FFffFF" ;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(baseX, baseY);
+      ctx.lineTo((baseX + x_new), y_new);
+      ctx.stroke();
 
+      range = 400;
+      radian = 30 * (3.142 / 180);
+      x_new = range * Math.cos(radian);
+      
+      y_new = baseY - Math.sqrt ( (range * range) - (x_new * x_new));
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(baseX, baseY);
+      ctx.lineTo((baseX - x_new), y_new);
+      ctx.stroke();
 
 }
 
