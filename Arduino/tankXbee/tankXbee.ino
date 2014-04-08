@@ -52,15 +52,15 @@ void directionSet (char direct) {
   //delay(19000);
   Serial.println(direct);
   int count = 0;
-  for(pos = 25; pos < 155; pos += 5)  // goes from 0 degrees to 180 degrees 
+  for(pos = 25; pos <= 155; pos += 5)  // goes from 0 degrees to 180 degrees 
   {                  
     // in steps of 1 degree 
-    Serial.print(pos);
-     Serial.print(" ");
+    //Serial.print(pos);
+    // Serial.print(" ");
     myservo.write(pos);     // tell servo to go to position in variable 'pos' 
     robot.RangeArray[count]  = pingArea ();
-    Serial.println(robot.RangeArray[count]);
     delay(500);
+    //Serial.println(robot.RangeArray[count]);
     count++; 
   } 
    myservo.write(90);
