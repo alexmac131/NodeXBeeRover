@@ -24,8 +24,9 @@ $(function() {
     });
     $("#stop").click(function(){
 		changeIndicator("", "");
+    askForDataFromNode  ({tankData:1});
       askForDataFromNode ({color:"#ffffff",direction:"stop", stopevent:1});
-      askForDataFromNode  ({tankData:1});
+      
 
     }); 
 
@@ -147,7 +148,7 @@ function drawScannerData (data) {
   var dataList = new Array();
   var ctx = c.getContext("2d");
 
-  var baseX = 232;
+  var baseX = 275;
   var baseY = 400;
   var baseRatio = .9;
   ctx.beginPath();
@@ -185,7 +186,7 @@ function drawScannerData (data) {
     ctx.fill();
     ctx.stroke();
 
-    ctx.fillStyle = '#ff0000';
+    ctx.fillStyle = '#ff6600';
     ctx.fillRect(baseX - (10 *baseRatio),baseY-(50*baseRatio),(10 * baseRatio),(20*baseRatio));
     ctx.stroke();
     var colors = [
@@ -276,6 +277,10 @@ for (i= 1; i < dataList.length; i++) {
       ctx.moveTo(baseX, baseY);
       ctx.lineTo((baseX - x_new), y_new);
       ctx.stroke();
+
+    ctx.fillStyle = '#ff6600';
+    ctx.fillRect(baseX - (10 *baseRatio),baseY-(50*baseRatio),(20 * baseRatio),(50*baseRatio));
+    ctx.stroke();
 
 }
 
