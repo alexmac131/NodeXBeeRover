@@ -1,5 +1,7 @@
 $(function() {
-	event.preventDefault();
+
+
+	  
     $("#forward").click(function(){
     	changeIndicator('#forwardImg', 'images/forward_green.jpg');
     	askForDataFromNode  ({color:"#ffffff",direction:"forward"});
@@ -136,7 +138,7 @@ function processFeedBack (data) {
   $("#engineI").text(data.engineImpulse);
   $("#rangeD").text(data.range);
 
-   drawScannerData(data.radarData);
+  drawScannerData(data.radarData);
 
 }
 
@@ -147,11 +149,11 @@ function drawScannerData (data) {
 
   var baseX = 220;
   var baseY = 330;
-  var baseRatio = 1.15;
+  var baseRatio = .80;
   ctx.beginPath();
   dataList = data.split(/,/);
   ctx.lineTo(baseX,baseY);
-  for (i= 1; i <= dataList.length; i++) {  
+  for (i= 1; i < dataList.length; i++) {  
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 1;
       range = (dataList[i] * baseRatio);
