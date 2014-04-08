@@ -26,11 +26,11 @@ function tankDataInit() {
     };    
 
     this.setRadarData=function(strValue){
-    	console.log("reading roverdata" + strValue);
+    	//console.log("reading roverdata" + strValue);
      	this.radarData=strValue;
     };
 	this.getRadarData = function(){
-		console.log("getting radar data");
+		//console.log("getting radar data");
      	return this.radarData;
     };    
 
@@ -212,7 +212,7 @@ my_http.createServer(function(request,response) {
 			}
 			else if (matchResults == "rover") {
 				var splitResults = ArduinoString.split(",");
-				console.log("rover data " + splitResults.length +  "  " + ArduinoString);
+				//console.log("rover data " + splitResults.length +  "  " + ArduinoString);
 				robotData.setRoverInfo(ArduinoString);
 				robotData.setLastCommand(splitResults[1]);
 				robotData.setRange(splitResults[5]);
