@@ -17,10 +17,18 @@ _____
 
 
 ## The Interface
-![Web Interface ](/images/controls2TankWeb.jpg)
+![Web Interface ](/images/nodeTankControls.jpg)
 
 Left to Right.
-Driving panel, engine power (left and right), Ultra Sonic radar map.
+* Driving panel
+* Engine power (left and right engine)
+* Ultra Sonic radar map
+
+Four Quadrants of data around the directional arrows
+* Top left is range data
+* Top right is the last robot command
+* Bottom left will be extra sensor data
+* Bottom right robot settings: left engine, right engine, command delay, range.
 
 ______
 ### Required 
@@ -77,8 +85,7 @@ ___
  - Create a Data structure that can pass easily between the robot and the client interface.
  - Better images for the read me. 
  - A flow diagram describing how the whole product works.
- - An X-2 vehicle that is more stable hardware wise as the whole X-1 is really "interesting" to manage; not, so something wheeled.
- - Add a sensor module attachment for servos. arm and camera.
+ - Add thermal sensors, arm and camera.
  
 
 
