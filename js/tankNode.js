@@ -225,13 +225,20 @@ function drawScannerData (data) {
       
 for (i= 1; i < dataList.length; i++) {  
         quad = 1;
-      ctx.strokeStyle = colors[i] ;
+      //ctx.strokeStyle = colors[i] ;
       ctx.lineWidth = 3;
       range = (dataList[i] * baseRatio);
-      degree = 25 + (i * 5);
-      if (degree % 2 ) {
-        continue;
+      if (range < 70) {
+         ctx.strokeStyle = "#ff0000" ;
       }
+      else if (range >= 70 && range <= 200) {
+        ctx.strokeStyle = "#ffff00" ;
+      }
+      else {
+          ctx.strokeStyle = "#00ff00" ; 
+      }
+
+      degree = 25 + (i * 5);
       if (degree > 90) {
         degree = 180 - degree;
         quad  = 2
