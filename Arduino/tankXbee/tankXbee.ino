@@ -1,12 +1,13 @@
 #include <Servo.h>
 Servo myservo;
 
+const int servoPin = 9;
 const int pwm_a = 3;   //PWM control for motor outputs 1 and 2 is on digital pin 3
 const int pwm_b = 11;  //PWM control for motor outputs 3 and 4 is on digital pin 11
 const int pingPin = 7;  // pinger
 const int dir_a = 12;  //direction control for motor outputs 1 and 2 is on digital pin 12
 const int dir_b = 13;  //direction control for motor outputs 3 and 4 is on digital pin 13
-const int minRange = 40;
+const int minRange = 30;
 
 
 struct robotState {
@@ -23,7 +24,7 @@ typedef struct robotState RoverData;
 RoverData robot;
 
 void setup() {
-  myservo.attach(10);
+  myservo.attach(servoPin);
   pinMode(pwm_a, OUTPUT);  //Set control pins to be outputs
   pinMode(pwm_b, OUTPUT);
   
@@ -32,41 +33,24 @@ void setup() {
   
   Serial.begin(9600);
   Serial.println("-----------");
-  Serial.println("setup test ");
+  Serial.println("setup test servo 90 ");
   Serial.println("-----------");
+  sendBackData ();
 }
 
 
 void loop () {
      Serial.flush();
      if (checkForCommands()) {
-          Serial.println ("Data,Good Command," + String(robot.lastCommand));    
+          //Serial.println ("Data,Good Command," + String(robot.lastCommand));    
      }
-   delay(100);
+     myservo.detach();
+    delay(300);
 }
 
 void directionSet (char direct) { 
   
-  int pos = 0;
-  //myservo.write(90);
-  //delay(19000);
-  Serial.println(direct);
-  int count = 0;
-  for(pos = 25; pos <= 155; pos += 5)  // goes from 0 degrees to 180 degrees 
-  {                  
-    // in steps of 1 degree 
-    //Serial.print(pos);
-    // Serial.print(" ");
-    myservo.write(pos);     // tell servo to go to position in variable 'pos' 
-    robot.RangeArray[count]  = pingArea ();
-    delay(850);
-    //Serial.println(robot.RangeArray[count]);
-    count++; 
-  } 
-   myservo.write(90);
-
-  robot.range = robot.RangeArray[12];    
- 
+  radarSweep();
   if (robot.range <= minRange && direct == 'F') {
     Serial.println ("ALERT,Sonar, "+ String(robot.range));
     return;
@@ -78,13 +62,13 @@ void directionSet (char direct) {
       digitalWrite(dir_a, HIGH);  
       digitalWrite(dir_b, HIGH);  
       if (direct == 'L') {
-      robot.turnPowerA = 150;
-      robot.turnPowerB = 100;
-      robot.turnDelay = 290;
+        robot.turnPowerA = 140;
+        robot.turnPowerB = 50;
+        robot.turnDelay = 690;
       } else {
-        robot.turnPowerA = 150;
-        robot.turnPowerB = 150;
-        robot.turnDelay = 1000;
+        robot.turnPowerA = 100;
+        robot.turnPowerB = 100;
+        robot.turnDelay = 2000;
       }
       runCommand = true;
   }
@@ -92,13 +76,13 @@ void directionSet (char direct) {
       digitalWrite(dir_a, LOW); 
       digitalWrite(dir_b, LOW); 
       if (direct == 'R') {    
-        robot.turnPowerA = 150;
-        robot.turnPowerB = 100;
-        robot.turnDelay = 290;
+        robot.turnPowerA = 140;
+        robot.turnPowerB = 50;
+        robot.turnDelay = 690;
       } else {
-          robot.turnPowerA = 150;
-          robot.turnPowerB = 150;
-          robot.turnDelay = 1000;
+          robot.turnPowerA = 100;
+          robot.turnPowerB = 100;
+          robot.turnDelay = 2000;
       }
       runCommand = true;      
   }
@@ -109,12 +93,13 @@ void directionSet (char direct) {
   if (!runCommand) {
      return;
   }
-   Serial.println("command building now and data ");
+  // Serial.println("command building now and data ");
   analogWrite(pwm_a, (robot.turnPowerA));   
   analogWrite(pwm_b, (robot.turnPowerB));
   delay(robot.turnDelay); // this controls how long the command is excuted before we return control 
   analogWrite(pwm_a, 0);   
   analogWrite(pwm_b, 0);
+  radarSweep();
   return;
 }
 
@@ -161,7 +146,7 @@ boolean checkForCommands () {
       delay(40);
    }
   Serial.flush();
-  if (!stringCommandComplete) {
+  if (!stringCommandComplete || commandString.length() < 2) {
       return false;
   }
   else {
@@ -170,7 +155,7 @@ boolean checkForCommands () {
   
   robot.lastCommand = commandString;
   //commandString.toLowerCase();
- Serial.println(commandString);
+ //Serial.println(commandString);
   if (commandString == "left") {
         directionSet('L');
         return true;      
@@ -187,13 +172,9 @@ boolean checkForCommands () {
         directionSet ('F');
         return true;
   }
-  else if (commandString == "tankdata") {
-        sendBackData ();
-        sendRadarData();
-        return true;
-  }
   else {
-        return false;
+      sendBackData ();
+      return false;;
   }
   return false;
 }
@@ -203,7 +184,6 @@ void sendRadarData () {
   for (int c = 0; c < 25; c++) {
     // r obot.rangeData .=  212,22,2,222,22252,2424521,11
     Serial.print(robot.RangeArray[c]);
-    
     if (c < 24) {
      Serial.print(",");
     }  
@@ -215,4 +195,35 @@ void sendBackData () {
   String Message  =  "rover," + robot.lastCommand + "," + String(robot.turnPowerA)  + "," + String(robot.turnPowerB) + "," + String(robot.turnDelay) + "," + String(robot.range);
   Serial.println(Message);  
   
+}
+
+void radarSweep () {  
+  int pos = 0;
+  //myservo.write(90);
+  //delay(19000);
+  //Serial.println(direct);
+  int count = 0;
+  for(pos = 25; pos <= 155; pos += 5)  // goes from 0 degrees to 180 degrees 
+  {                  
+    // in steps of 1 degree 
+    //Serial.print(pos);
+    // Serial.print(" ");
+    myservo.attach(servoPin);
+    myservo.write(pos);     // tell servo to go to position in variable 'pos'
+    delay(200);
+    myservo.detach();
+    delay(200); 
+    robot.RangeArray[count]  = pingArea ();
+    //Serial.print(robot.RangeArray[count]);
+    //Serial.print(" pos ");
+    //Serial.println(pos);
+    count++; 
+  } 
+  myservo.attach(servoPin);
+  myservo.write(90);
+  delay(200);
+  myservo.detach();
+
+  robot.range = robot.RangeArray[12];    
+  sendRadarData();
 }

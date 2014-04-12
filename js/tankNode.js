@@ -23,11 +23,8 @@ $(function() {
         askForDataFromNode  ({tankData:1});
     });
     $("#stop").click(function(){
-		changeIndicator("", "");
-    askForDataFromNode  ({tankData:1});
-      askForDataFromNode ({color:"#ffffff",direction:"stop", stopevent:1});
-      
-
+		 changeIndicator("", "");
+     askForDataFromNode  ({tankData:1});
     }); 
 
     $("#slider-impulseH").slider({
@@ -70,7 +67,7 @@ $(function() {
   		value: 60,
   		slide: function( event, ui ) {
     		$( "#amount3" ).text( ui.value );
-			askForDataFromNode ({engine:ui.value,engineUpDate:"right"});
+			  askForDataFromNode ({engine:ui.value,engineUpDate:"right"});
 	    },
 		  change: function( event, ui ) {
     		$( "#amount3" ).text( ui.value );
@@ -113,10 +110,12 @@ function askForDataFromNode(data) {
 }
 
 function processFeedBack (data) {
+  console.log(data.lastCommand);
 
 	$("#status1").text( data.range);
-	$("#status2").text( data.lastCommand );
-
+  if (data.lastCommand != "tankData") {
+	 $("#status2").text( data.lastCommand );
+  }
   if (data.alert) {
   	$("#status1,#status2,#status3, #status4").css("color", "#FF6802");
 		$("#status3").text( data.alert);
@@ -164,7 +163,7 @@ function drawScannerData (data) {
         degree = 180 - degree;
         quad  = 2
       }
-      console.log(i + "  ---- " + range + " " + degree);
+      //console.log(i + "  ---- " + range + " " + degree);
       radian = degree * (3.142 / 180);
       var x_new = range * Math.cos(radian);
       var y_new = baseY - Math.sqrt ( (range * range) - (x_new * x_new));
@@ -187,7 +186,7 @@ function drawScannerData (data) {
     ctx.stroke();
 
     ctx.fillStyle = '#ff6600';
-    ctx.fillRect(baseX - (10 *baseRatio),baseY-(50*baseRatio),(10 * baseRatio),(20*baseRatio));
+    //ctx.fillRect(baseX - (10 *baseRatio),baseY-(50*baseRatio),(10 * baseRatio),(20*baseRatio));
     ctx.stroke();
     var colors = [
       "#ff0000",
@@ -228,10 +227,10 @@ for (i= 1; i < dataList.length; i++) {
       //ctx.strokeStyle = colors[i] ;
       ctx.lineWidth = 3;
       range = (dataList[i] * baseRatio);
-      if (range < 70) {
+      if (range < 30) {
          ctx.strokeStyle = "#ff0000" ;
       }
-      else if (range >= 70 && range <= 200) {
+      else if (range >= 30 && range <= 90) {
         ctx.strokeStyle = "#ffff00" ;
       }
       else {
@@ -243,7 +242,7 @@ for (i= 1; i < dataList.length; i++) {
         degree = 180 - degree;
         quad  = 2
       }
-      console.log("count " +i + "degree " + degree + " color " + colors[i] + " range " + range);
+      //console.log("count " +i + "degree " + degree + " color " + colors[i] + " range " + range);
       radian = degree * (3.142 / 180);
       var x_new = range * Math.cos(radian);
       var y_new = baseY - Math.sqrt ( (range * range) - (x_new * x_new));
@@ -285,9 +284,22 @@ for (i= 1; i < dataList.length; i++) {
       ctx.lineTo((baseX - x_new), y_new);
       ctx.stroke();
 
-    ctx.fillStyle = '#ff6600';
-    ctx.fillRect(baseX - (10 *baseRatio),baseY-(50*baseRatio),(20 * baseRatio),(50*baseRatio));
-    ctx.stroke();
+      ctx.fillStyle = '#ff6600';
+      ctx.fillRect(baseX - (10 *baseRatio),baseY-(50*baseRatio),(20 * baseRatio),(50*baseRatio));
+      ctx.stroke();
+
+}
+
+function roverOverLay (status) {
+  var c = document.getElementById("myCanvas");
+  var dataList = new Array();
+  var ctx = c.getContext("2d");
+
+  var baseX = 275;
+  var baseY = 400;
+  var baseRatio = .9;
+  ctx.beginPath();
+
 
 }
 

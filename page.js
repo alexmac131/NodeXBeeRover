@@ -102,7 +102,7 @@ var SerialPort = serialport.SerialPort; // localize object constructor
 
 try { 
 var sp = new SerialPort(comPort, {
-  parser: serialport.parsers.readline("\r"),
+  parser: serialport.parsers.readline(),
   baudrate: 9600,
   error: function( er, messsage) { 
   		console.log("error " + err + "\n" + "message" + message);ß
@@ -193,7 +193,7 @@ my_http.createServer(function(request,response) {
  	sp.on('data', function (arduinoData) {
 
  		//console.log("\n\n\n----\ntest serial from Arduino \n------ \n\n\n")
-		if (arduinoData.length < 1) {
+		if (arduinoData.length < 2) {
 			return;
 		}
     	var ArduinoString = arduinoData.toString();
@@ -203,6 +203,7 @@ my_http.createServer(function(request,response) {
 		//console.log ("data recieved ->" + arduinoData + "<- aaa ");
 		
 		if (match) {
+			console.log ("data recieved ->" + ArduinoString + "<- aaa ");
 			matchResults = match[0].toLowerCase();
 			if (matchResults == "alert") {
 				var splitResults = ArduinoString.split(",");
@@ -231,6 +232,7 @@ my_http.createServer(function(request,response) {
 				//console.log("->unmatched data ", match[0], data);
 			}
 		}
+		match = "";
 
   	});
  	request.on('end', function () { 
@@ -238,6 +240,7 @@ my_http.createServer(function(request,response) {
 
 		//var _get = url.parse(request.url); //, true).query; 
 		var _get = url.parse(request.url, true).query; 
+		console.log(_get);
 		var sendToArduino = "";	
 		if (_get.direction) {
 			//console.log ("direction ---------- " + _get.direction);
