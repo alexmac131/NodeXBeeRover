@@ -1,5 +1,12 @@
-NodeTank X-1 0.04
+NodeRover XR1
 ==
+
+![The Rover](/images/spaceapps.png )
+![The Rover](/images/nasa_logo.png)
+
+[The Rover that could](https://2014.spaceappschallenge.org/project/the-little-rover-that-could/)
+
+
 ### What is it?
 This is an experiment where nodeJs acts as a middleware between the UI controller and other services on the back end while the user drives the robot.  The nodeJS server could also attach other services to aid the rover, collect data, etc.
 
@@ -10,14 +17,14 @@ This is my first project I am sharing on GitHub, so please be patient.
 _____
 ## The tank
 
-![The tank](/images/tank.JPG)
+![The Rover](/images/tank.JPG)
 
 #### Radio transceiver.
 ![Xbee Transceiver ](/images/xBee.JPG)
 
 
 ## The Interface
-![Web Interface ](/images/nodeTankControls.jpg)
+![Web Interface ](/images/nodeRoverControls.jpg)
 
 Left to Right.
 * Driving panel
@@ -33,7 +40,7 @@ Four Quadrants of data around the directional arrows
 ______
 ### Required 
 
-You need a serial device attached in order to run the nodeJS server otherwise the Serial code will not run.  Needless to say you will need a Arduino Tank (instructions not included) but you can look here [Arduino Tank](http://www.instructables.com/id/Little-Tank-ArduinoPicaxeTamiya-platform-las/) for suggestions.
+You need a serial device attached in order to run the nodeJS server otherwise the Serial code will not run.  Needless to say you will need a Arduino Rover (instructions not included) but you can look here [Arduino Rover](http://www.instructables.com/id/Little-Rover-ArduinoPicaxeTamiya-platform-las/) for suggestions.
 
 nodeJS
 
