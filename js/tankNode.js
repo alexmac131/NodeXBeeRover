@@ -1,12 +1,67 @@
 $(function() {
 
+    cssSet = { 
+          "width": 550,  
+          'visibility':'visible',
+          "height": 400, 
+          "z-index": 0, 
+          "top": 50, 
+          "right": 1,
+          "position": "absolute"  
+    };
+    $("#myCanvas").css(cssSet);
 
+    var sizeFlag = 0;
+    $("#closeMessage").show();
+    var myVar = setInterval(function(){
+      console.log("interval call")
+      askForDataFromNode({tankData:1});
+    },
+    5000);
 	  
     $("#forward").click(function(){
     	changeIndicator('#forwardImg', 'images/forward_green.jpg');
     	askForDataFromNode  ({color:"#ffffff",direction:"forward"});
     	askForDataFromNode  ({tankData:1});
-    }); 
+    });
+
+    $("#myCanvas").click(function(){
+      if (sizeFlag == 1) {
+        console.log("setting smaller");
+        cssSet = {  
+          "width": 550,  
+          'visibility':'visible',
+          "height": 400, 
+          "z-index": 0, 
+          "top": 50, 
+          "right": 1,
+          "position": "absolute"  
+        };
+        $("#myCanvas").css(cssSet);
+        sizeFlag = 0;
+      
+      } 
+      else {
+      
+        var y =  $.getDocHeight() ;
+        var x  = $.getDocWidth() ;   
+         cssSet = {  
+          "width": x,  
+          'visibility':'visible',
+          "height": y, 
+          "z-index": 0, 
+          "top": 1, 
+          "right": 1,
+          "position": "absolute",
+          "z-index": 3  
+        };
+       
+        $("#myCanvas").css(cssSet);
+        sizeFlag = 1;
+      }
+      
+    });
+
     $("#back").click(function(){
            changeIndicator('#backImg', 'images/back_green.jpg');
            askForDataFromNode  ({color:"#ffffff",direction:"back"});
@@ -284,9 +339,7 @@ for (i= 1; i < dataList.length; i++) {
       ctx.lineTo((baseX - x_new), y_new);
       ctx.stroke();
 
-      ctx.fillStyle = '#ff6600';
-      ctx.fillRect(baseX - (10 *baseRatio),baseY-(50*baseRatio),(20 * baseRatio),(50*baseRatio));
-      ctx.stroke();
+    
 
 }
 
@@ -300,7 +353,29 @@ function roverOverLay (status) {
   var baseRatio = .9;
   ctx.beginPath();
 
+      ctx.fillStyle = '#ff6600';
+      ctx.fillRect(baseX - (10 *baseRatio),baseY-(50*baseRatio),(20 * baseRatio),(50*baseRatio));
+      ctx.stroke();
+
 
 }
 
 });
+
+$.getDocHeight = function(){
+        var db = document.body;
+        var dde = document.documentElement;
+    return Math.min( db.scrollHeight, dde.scrollHeight, db.offsetHeight,
+        dde.offsetHeight, db.clientHeight, dde.clientHeight,
+        $(document).height(), $(window).height(),
+        document.documentElement.clientHeight);
+};
+
+$.getDocWidth = function(){
+        var db = document.body;
+        var dde = document.documentElement;
+        return Math.min( db.scrollWidth, dde.scrollWidth, db.offsetWidth,
+                dde.offsetWidth, db.clientWidth, dde.clientWidth, $(document).width(),
+                $(window).width(), document.documentElement.clientWidth);
+};
+

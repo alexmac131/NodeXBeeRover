@@ -15,6 +15,10 @@ struct robotState {
  unsigned int turnPowerA;
  unsigned int  turnPowerB;
  unsigned int  turnDelay;
+ unsigned int turnPowerASaved;
+ unsigned int  turnPowerBSaved;
+ unsigned int  turnDelaySaved;
+ boolean overRide ;
  unsigned int range;
  int RangeArray[25];
  String rangeData;
@@ -24,6 +28,7 @@ typedef struct robotState RoverData;
 RoverData robot;
 
 void setup() {
+  robot.overRide = false;
   myservo.attach(servoPin);
   pinMode(pwm_a, OUTPUT);  //Set control pins to be outputs
   pinMode(pwm_b, OUTPUT);
@@ -31,11 +36,13 @@ void setup() {
   pinMode(dir_a, OUTPUT);
   pinMode(dir_b, OUTPUT);
   
-  Serial.begin(9600);
-  Serial.println("-----------");
-  Serial.println("setup test servo 90 ");
-  Serial.println("-----------");
+  Serial.begin(9600);;
+  radarSweep();
   sendBackData ();
+  Serial.println("-----------");
+  Serial.println("setup ready ");
+  Serial.println("-----------");
+  
 }
 
 
@@ -50,7 +57,37 @@ void loop () {
 
 void directionSet (char direct) { 
   
-  radarSweep();
+  //radarSweep();
+  
+  if (robot.overRide) {
+    Serial.println("we have an override");
+    if (robot.range <= minRange ) {
+      
+      Serial.println("we have an override ABORT");
+      Serial.println ("ALERT,Sonar, "+ String(robot.range));
+      robot.overRide = false;
+      return;
+    }
+    // Serial.println("command building now and data ");
+    
+    analogWrite(pwm_a, (robot.turnPowerA));   
+    analogWrite(pwm_b, (robot.turnPowerB));
+    delay(robot.turnDelay); // this controls how long the command is excuted before we return control 
+    analogWrite(pwm_a, 0);   
+    analogWrite(pwm_b, 0);
+    radarSweep();
+    robot.overRide = false;
+    Serial.print("turn A ");
+    Serial.println(robot.turnPowerA);
+    Serial.print("turn b ");
+    Serial.println(robot.turnPowerB);
+    Serial.print(" delay ");
+    Serial.println(robot.turnDelay);
+    Serial.println("we have completed an  override");
+    return;
+  }
+  
+  
   if (robot.range <= minRange && direct == 'F') {
     Serial.println ("ALERT,Sonar, "+ String(robot.range));
     return;
@@ -58,37 +95,41 @@ void directionSet (char direct) {
 
   //Serial.println(robot.range);   
   boolean runCommand = false;
-  if (direct == 'L' || direct == 'F') {
+  if (direct == 'F') {
       digitalWrite(dir_a, HIGH);  
       digitalWrite(dir_b, HIGH);  
-      if (direct == 'L') {
-        robot.turnPowerA = 140;
-        robot.turnPowerB = 50;
-        robot.turnDelay = 690;
-      } else {
-        robot.turnPowerA = 100;
-        robot.turnPowerB = 100;
-        robot.turnDelay = 2000;
-      }
+      robot.turnPowerA = 100;
+      robot.turnPowerB = 100;
+      robot.turnDelay = 3000;
       runCommand = true;
   }
-  else if (direct == 'R' || direct == 'B') { 
+  else if (direct == 'L') { 
+      digitalWrite(dir_a, HIGH); 
+      digitalWrite(dir_b, HIGH); 
+      robot.turnPowerA = 100;
+      robot.turnPowerB = 10;
+      robot.turnDelay = 1000;
+      runCommand = true;      
+  }
+  else if (direct == 'R') { 
+      digitalWrite(dir_a, HIGH); 
+      digitalWrite(dir_b, HIGH); 
+      robot.turnPowerA = 10;
+      robot.turnPowerB = 100;
+      robot.turnDelay = 1800;
+      runCommand = true;      
+  }
+  else if (direct == 'B') { 
       digitalWrite(dir_a, LOW); 
       digitalWrite(dir_b, LOW); 
-      if (direct == 'R') {    
-        robot.turnPowerA = 140;
-        robot.turnPowerB = 50;
-        robot.turnDelay = 690;
-      } else {
-          robot.turnPowerA = 100;
-          robot.turnPowerB = 100;
-          robot.turnDelay = 2000;
-      }
+      robot.turnPowerA = 100;
+      robot.turnPowerB = 100;
+      robot.turnDelay = 3000;
       runCommand = true;      
   }
   else {
       return;
-   }
+  }
   
   if (!runCommand) {
      return;
@@ -141,7 +182,7 @@ boolean checkForCommands () {
          break;    
       }
       else {
-          commandString +=  inChar;
+          commandString +=  inChar;  
       }
       delay(40);
    }
@@ -156,6 +197,47 @@ boolean checkForCommands () {
   robot.lastCommand = commandString;
   //commandString.toLowerCase();
  //Serial.println(commandString);
+     int testForEngine = commandString.indexOf("engineleft:");
+     if (testForEngine != -1) {  
+       String dataT = commandString.substring(commandString.indexOf(":") + 1);
+         Serial.println("we have a left command for the engine  " + dataT );
+         robot.overRide = true;
+         robot.turnPowerASaved =  robot.turnPowerA;
+         robot.turnPowerA =dataT.toInt();
+         if (robot.turnPowerA > 100) {
+           robot.turnPowerA = 100;
+         }
+
+         return true;
+       
+     }
+  
+     testForEngine = commandString.indexOf("engineright:");
+     if (testForEngine != -1) {  
+         String dataT = commandString.substring(commandString.indexOf(":") +1 );
+         Serial.println("we have a right command for the engine " + dataT );
+         robot.overRide = true;
+         robot.turnPowerBSaved =  robot.turnPowerB;
+         robot.turnPowerB =dataT.toInt();
+         if (robot.turnPowerB > 100) {
+           robot.turnPowerB = 100;
+         }
+         return true;
+     }
+  
+     testForEngine = commandString.indexOf("enginepower:");
+     if (testForEngine != -1) {
+       String dataT = commandString.substring(commandString.indexOf(":") + 1);
+         Serial.println("we have a power command for the engine   " + dataT );
+         robot.overRide = true;
+         robot.turnDelaySaved =  robot.turnDelay;
+         robot.turnDelay =dataT.toInt();
+         if (robot.turnDelay < 400) {
+            robot.turnDelay = 400;  
+         } 
+         return true;
+     }
+   
   if (commandString == "left") {
         directionSet('L');
         return true;      

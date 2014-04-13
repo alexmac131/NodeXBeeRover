@@ -91,7 +91,7 @@ function tankDataInit() {
 	this.getEngineImpulse = function(strValue) {
      		return this.engineImpulse;
 	}
-	console.log ("done init");	
+	console.log ("done init");			
 	
 }
 var webPort = 8084;
@@ -240,16 +240,20 @@ my_http.createServer(function(request,response) {
 
 		//var _get = url.parse(request.url); //, true).query; 
 		var _get = url.parse(request.url, true).query; 
-		console.log(_get);
+		//{ engine: '101', engineUpDate: 'left' }
+	
 		var sendToArduino = "";	
 		if (_get.direction) {
 			//console.log ("direction ---------- " + _get.direction);
-			sendToArduino = new String (  _get.direction).toLowerCase();
+			sendToArduino = new String (  _get.direction).toLowerCase() ;
 			robotData.setLastCommand(sendToArduino);
+				console.log(sendToArduino);
 		}	
-		else if (_get.engineUpdate) {
-			//console.log ("engineUpdate");
-			sendToArduino = new String (  _get.engineUpdate).toLowerCase();
+		else if (_get.engineUpDate) {
+			console.log ("engineUpdate ->" + _get.engine + " " + _get.engineUpDate);
+			var engineSend = "engine" + _get.engineUpDate  + ":" + _get.engine + "\r";
+			sendToArduino = new String (engineSend).toLowerCase() ;
+			console.log(sendToArduino);
 		}
 		else if (_get.tankData) {
 			//console.log("tankData xxxxxxxxxxx");
@@ -258,6 +262,7 @@ my_http.createServer(function(request,response) {
 		else if (_get.radarData) {
 			//console.log("radardata xxxxxxxxxxx");
 			sendToArduino =  new String ("radardata").toLowerCase() + "\r";
+			console.log(sendToArduino);
 		}
 
 		else {
