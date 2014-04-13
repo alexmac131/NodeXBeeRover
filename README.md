@@ -17,7 +17,7 @@ This is my first project I am sharing on GitHub, so please be patient.
 _____
 ## The Rover
 
-![The Rover](/images/XR1.JPG)
+![The Rover](/images/xr1.jpg)
 
 #### Radio transceiver.
 ![Xbee Transceiver ](/images/xBee.JPG)
