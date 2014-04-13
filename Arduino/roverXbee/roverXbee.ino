@@ -60,10 +60,10 @@ void directionSet (char direct) {
   //radarSweep();
   
   if (robot.overRide) {
-    Serial.println("we have an override");
+    //Serial.println("we have an override");
     if (robot.range <= minRange ) {
       
-      Serial.println("we have an override ABORT");
+      //Serial.println("we have an override ABORT");
       Serial.println ("ALERT,Sonar, "+ String(robot.range));
       robot.overRide = false;
       return;
@@ -77,13 +77,13 @@ void directionSet (char direct) {
     analogWrite(pwm_b, 0);
     radarSweep();
     robot.overRide = false;
-    Serial.print("turn A ");
-    Serial.println(robot.turnPowerA);
-    Serial.print("turn b ");
-    Serial.println(robot.turnPowerB);
-    Serial.print(" delay ");
-    Serial.println(robot.turnDelay);
-    Serial.println("we have completed an  override");
+    //Serial.print("turn A ");
+    //Serial.println(robot.turnPowerA);
+    //Serial.print("turn b ");
+    //Serial.println(robot.turnPowerB);
+    //Serial.print(" delay ");
+    //Serial.println(robot.turnDelay);
+    //Serial.println("we have completed an  override");
     return;
   }
   
@@ -100,7 +100,7 @@ void directionSet (char direct) {
       digitalWrite(dir_b, HIGH);  
       robot.turnPowerA = 100;
       robot.turnPowerB = 100;
-      robot.turnDelay = 3000;
+      robot.turnDelay = 2400;
       runCommand = true;
   }
   else if (direct == 'L') { 
@@ -108,7 +108,7 @@ void directionSet (char direct) {
       digitalWrite(dir_b, HIGH); 
       robot.turnPowerA = 100;
       robot.turnPowerB = 10;
-      robot.turnDelay = 1000;
+      robot.turnDelay = 800;
       runCommand = true;      
   }
   else if (direct == 'R') { 
@@ -116,7 +116,7 @@ void directionSet (char direct) {
       digitalWrite(dir_b, HIGH); 
       robot.turnPowerA = 10;
       robot.turnPowerB = 100;
-      robot.turnDelay = 1800;
+      robot.turnDelay = 800;
       runCommand = true;      
   }
   else if (direct == 'B') { 
@@ -124,7 +124,7 @@ void directionSet (char direct) {
       digitalWrite(dir_b, LOW); 
       robot.turnPowerA = 100;
       robot.turnPowerB = 100;
-      robot.turnDelay = 3000;
+      robot.turnDelay = 2400;
       runCommand = true;      
   }
   else {
@@ -200,7 +200,7 @@ boolean checkForCommands () {
      int testForEngine = commandString.indexOf("engineleft:");
      if (testForEngine != -1) {  
        String dataT = commandString.substring(commandString.indexOf(":") + 1);
-         Serial.println("we have a left command for the engine  " + dataT );
+         //Serial.println("we have a left command for the engine  " + dataT );
          robot.overRide = true;
          robot.turnPowerASaved =  robot.turnPowerA;
          robot.turnPowerA =dataT.toInt();
@@ -215,7 +215,7 @@ boolean checkForCommands () {
      testForEngine = commandString.indexOf("engineright:");
      if (testForEngine != -1) {  
          String dataT = commandString.substring(commandString.indexOf(":") +1 );
-         Serial.println("we have a right command for the engine " + dataT );
+         //Serial.println("we have a right command for the engine " + dataT );
          robot.overRide = true;
          robot.turnPowerBSaved =  robot.turnPowerB;
          robot.turnPowerB =dataT.toInt();
@@ -228,7 +228,7 @@ boolean checkForCommands () {
      testForEngine = commandString.indexOf("enginepower:");
      if (testForEngine != -1) {
        String dataT = commandString.substring(commandString.indexOf(":") + 1);
-         Serial.println("we have a power command for the engine   " + dataT );
+         //Serial.println("we have a power command for the engine   " + dataT );
          robot.overRide = true;
          robot.turnDelaySaved =  robot.turnDelay;
          robot.turnDelay =dataT.toInt();
@@ -262,7 +262,7 @@ boolean checkForCommands () {
 }
 
 void sendRadarData () {
-   Serial.print("radar,");
+  Serial.print("radar,");
   for (int c = 0; c < 25; c++) {
     // r obot.rangeData .=  212,22,2,222,22252,2424521,11
     Serial.print(robot.RangeArray[c]);
@@ -270,7 +270,7 @@ void sendRadarData () {
      Serial.print(",");
     }  
   }
-  Serial.println();
+  Serial.println(); 
 }
 
 void sendBackData () {
