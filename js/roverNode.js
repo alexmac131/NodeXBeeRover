@@ -1,5 +1,17 @@
 $(function() {
 
+
+   //alert (navigator.userAgent) ;
+   var re = /(ipad|iphone)/i;
+   var match = re.exec(navigator.userAgent);
+   if (match) {
+    $("#slider-impulseH").hide();
+    $("#slider-vertical2").hide();
+    $("#slider-vertical3").hide();
+
+
+   }
+
     cssSet = { 
           "width": 550,  
           'visibility':'visible',
@@ -12,12 +24,12 @@ $(function() {
     $("#myCanvas").css(cssSet);
 
     var sizeFlag = 0;
-    $("#closeMessage").show();
+    // $("#closeMessage").show();
     var myVar = setInterval(function(){
-      console.log("interval call")
+      //console.log("interval call")
       askForDataFromNode({roverData:1});
     },
-    5000);
+    1500);
 	  
     $("#forward").click(function(){
     	changeIndicator('#forwardImg', 'images/forward_green.jpg');
@@ -174,15 +186,15 @@ function processFeedBack (data) {
   if (data.alert) {
   	$("#status1,#status2,#status3, #status4").css("color", "#FF6802");
 		$("#status3").text( data.alert);
-		changeIndicator("","");
+		// changeIndicator("","");
 		return;
 	}	
 	else if (data.lastCommand == "stop") {
     changeIndicator("","");
-		$("#status2").text( data.lastCommand );
+		$("#status2").text( " ");
 		$("#status2,#status1").css("color", "#DE6262");
 	}
-	else {
+	else { 
 		$("#status1,#status2,#status3").css("color", "#000000");
 		$("#slider-vertical2").slider("value",data.leftEngine);
 		$("#slider-vertical3").slider("value", data.rightEngine);
@@ -201,6 +213,12 @@ function drawScannerData (data) {
   var c = document.getElementById("myCanvas");
   var dataList = new Array();
   var ctx = c.getContext("2d");
+  ctx.clearRect(0, 0, 550, 400);
+
+  var alertFlag = false;
+  $("#status3").text("");
+  $("#status4").text("");
+  $("#status3,#status4").css("color", "#000000");
 
   var baseX = 275;
   var baseY = 400;
@@ -293,10 +311,15 @@ for (i= 1; i < dataList.length; i++) {
       }
 
       degree = 25 + (i * 5);
+      if (degree >= 85 && degree <= 95 && range <= 40) {
+          alertFlag = true;
+      }
       if (degree > 90) {
         degree = 180 - degree;
         quad  = 2
       }
+
+
       //console.log("count " +i + "degree " + degree + " color " + colors[i] + " range " + range);
       radian = degree * (3.142 / 180);
       var x_new = range * Math.cos(radian);
@@ -313,9 +336,13 @@ for (i= 1; i < dataList.length; i++) {
       ctx.lineTo(x_new, y_new);
       ctx.stroke();
    }  
+   if (alertFlag) {
+      $("#status3").text("WARN");
+      $("#status4").text("RANGE 4");
+      $("#status3,#status4").css("color", "#DE6262");
+   }
 
-
-
+// draw outer cone shape not actual readings.
       var range = 400;
       radian = 30 * (3.142 / 180);
       var x_new = range * Math.cos(radian);
