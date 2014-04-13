@@ -5,7 +5,7 @@ url     = require("url"),
 filesys = require("fs");  
 eventsA = require("events");
 
-function tankDataInit() {
+function roverDataInit() {
 	this.lastCommand = "starting";
 	this.status = true;
 	this.heart = false;
@@ -95,7 +95,7 @@ function tankDataInit() {
 	
 }
 var webPort = 8084;
-var robotData = new tankDataInit();
+var robotData = new roverDataInit();
 var comPort = '/dev/tty.usbserial-A900fwHn';
 var serialport = require("serialport");
 var SerialPort = serialport.SerialPort; // localize object constructor
@@ -148,8 +148,8 @@ my_http.createServer(function(request,response) {
 
                     response.writeHeader(200);    
 					
-					if (_get.tankData  && !_get.direction) {
-						//console.log ("tank data request for browser")
+					if (_get.roverData  && !_get.direction) {
+						//console.log ("rover data request for browser")
 						var sendToBrowser = JSON.stringify(robotData);
 						//console.log(sendToBrowser)
 						response.write (sendToBrowser);
@@ -255,9 +255,9 @@ my_http.createServer(function(request,response) {
 			sendToArduino = new String (engineSend).toLowerCase() ;
 			console.log(sendToArduino);
 		}
-		else if (_get.tankData) {
-			//console.log("tankData xxxxxxxxxxx");
-			sendToArduino =  new String ("tankData").toLowerCase() + "\r";
+		else if (_get.roverData) {
+			//console.log("roverData xxxxxxxxxxx");
+			sendToArduino =  new String ("roverData").toLowerCase() + "\r";
 		}
 		else if (_get.radarData) {
 			//console.log("radardata xxxxxxxxxxx");

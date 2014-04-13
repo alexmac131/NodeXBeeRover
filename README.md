@@ -15,9 +15,9 @@ A combination of jQuery, nodeJs, Xbee and Arduino. This drives a custom built ro
 This is my first project I am sharing on GitHub, so please be patient.
 
 _____
-## The tank
+## The Rover
 
-![The Rover](/images/tank.JPG)
+![The Rover](/images/XR1.JPG)
 
 #### Radio transceiver.
 ![Xbee Transceiver ](/images/xBee.JPG)
@@ -87,8 +87,8 @@ ___
  - Ready the documentation, add tags to the code, add event handling and the science package to the code.
  - the README file itself has format issues so I need to learn how to format to my liking.
  - Better event handling for various error types from nodeJs and the Client side JavaScript.
- - Engine power updates to the robot. Since the tank treads are a bit quirky this allows the driver to adjust the power to the drive sprocket and just the course of the tank. Otherwise the tank will drive with a curve.
- - Engine Impulse delay to the robot. The driver can adjust the length of time the command issued is executed on the tank itself.
+ - Engine power updates to the robot. Since the Rover  treads are a bit quirky this allows the driver to adjust the power to the drive sprocket and just the course of the Rover. Otherwise the Rover  will drive with a curve.
+ - Engine Impulse delay to the robot. The driver can adjust the length of time the command issued is executed on the Rover itself.
  - Create a Data structure that can pass easily between the robot and the client interface.
  - Better images for the read me. 
  - A flow diagram describing how the whole product works.
