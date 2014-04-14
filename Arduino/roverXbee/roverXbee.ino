@@ -308,4 +308,6 @@ void radarSweep () {
 
   robot.range = robot.RangeArray[12];    
   sendRadarData();
+  delay(200);
+  Serial.println("ready4cmd");
 }
