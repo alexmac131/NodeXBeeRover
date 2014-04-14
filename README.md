@@ -58,7 +58,7 @@ attach the Xbee to the USB port
 change var comPort = '/dev/tty.usbserial-A900fwHn' to your comport
 
 Run node server with..
-	node page.js
+	node roverControlServer.js
 
 should result in the following message
 
@@ -69,7 +69,7 @@ should result in the following message
 
  A typical error results when you get the comm port wrong or the radio transceiver is not attached.
 
-    $ node page.js 
+    $ node roverControlServer.js
 	done init
 	Server Running on 8084
 
