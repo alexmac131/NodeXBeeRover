@@ -177,12 +177,15 @@ function askForDataFromNode(data) {
 }
 
 function processFeedBack (data) {
-  console.log(data.lastCommand);
+  console.log ("------------");
+  console.log(data);
+  console.log ("------------");
 
-	$("#status1").text( data.range);
-  if (data.lastCommand != "roverData") {
-	 $("#status2").text( data.lastCommand );
+	$("#status1").text( data.range );
+  if (data.lastCommand != "roverdata") {
+	   $("#status2").text( data.lastCommand );
   }
+  
   if (data.alert) {
   	$("#status1,#status2,#status3, #status4").css("color", "#FF6802");
 		$("#status3").text( data.alert);
@@ -204,7 +207,7 @@ function processFeedBack (data) {
   $("#engineR").text(data.rightEngine);
   $("#engineI").text(data.engineImpulse);
   $("#rangeD").text(data.range);
-
+  $("#status3").text(data.Ready4Command);
   drawScannerData(data.radarData);
 
 }
@@ -216,8 +219,7 @@ function drawScannerData (data) {
   ctx.clearRect(0, 0, 550, 400);
 
   var alertFlag = false;
-  $("#status3").text("");
-  $("#status4").text("");
+  $("#status4").text(data.Ready4Command);
   $("#status3,#status4").css("color", "#000000");
 
   var baseX = 275;
