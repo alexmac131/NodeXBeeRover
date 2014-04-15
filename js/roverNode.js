@@ -165,6 +165,7 @@ function loadXMLDoc(url, cfunc) {
 	xmlhttp.onreadystatechange=cfunc;
 	xmlhttp.open("GET",url,true);
 	xmlhttp.send();
+  console.log(xmlhttp);
 }
 
 function askForDataFromNode(data) {
@@ -182,7 +183,7 @@ function processFeedBack (data) {
   console.log ("------------");
 
 	$("#status1").text( data.range );
-  if (data.lastCommand != "roverdata") {
+  if ((data.lastCommand != "roverdata") && ( data.lastCommand != "roverdataroverdata")){
 	   $("#status2").text( data.lastCommand );
   }
   
