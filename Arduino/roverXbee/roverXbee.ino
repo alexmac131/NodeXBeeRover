@@ -37,6 +37,7 @@ void setup() {
   pinMode(dir_b, OUTPUT);
   
   Serial.begin(9600);;
+  setDefaults ();
   radarSweep();
   sendBackData ();
   Serial.println("-----------");
@@ -193,7 +194,11 @@ boolean checkForCommands () {
   else {
     //Serial.println("command to run  is " + commandString);
   }
-  
+  int testCmd = commandString.indexOf("roverdata");
+  if (testCmd != -1) {
+    sendBackData();
+    return false;
+  }
   robot.lastCommand = commandString;
   //commandString.toLowerCase();
  //Serial.println(commandString);
@@ -310,4 +315,20 @@ void radarSweep () {
   sendRadarData();
   delay(200);
   Serial.println("ready4cmd");
+}
+
+void setDefaults () {
+  robot.turnPowerA = 100;
+  robot.turnPowerB;
+  robot.turnDelay;
+  robot.turnPowerASaved;
+  robot.turnPowerBSaved;
+  robot.turnDelaySaved;
+  robot.overRide = false; 
+  robot.range = 10;
+  robot.RangeArray[0] = 0;
+  robot.rangeData = "";
+  robot.lastCommand = "";
+  
+  
 }
