@@ -203,14 +203,12 @@ my_http.createServer(function(request,response) {
                     response.writeHeader(200);    
 			
 					if (_get.roverData  && !_get.direction) {
-						//console.log ("rover data request for browser")
 						console.log("\n");	
 						var sendToBrowser = JSON.stringify(robotData);
 						console.log(sendToBrowser)
 						response.write (sendToBrowser);
 					}						
 					else if (_get.engineUpDate) {
-						//console.log("engineUpdate");
 						if (_get.engineUpDate == "left") {
 							robotData.setEngineLeft(_get.engine);
 						}
@@ -223,7 +221,7 @@ my_http.createServer(function(request,response) {
 						var sendToBrowser = JSON.stringify(robotData);
 						response.write (sendToBrowser);
 					}
-					else if (!_get.stopevent  && _get.direction) {
+					else if (!_get.stopevent  && _get.direction && !_get.roverData) {
 						//console.log("direction request");
 						robotData.setLastCommand(_get.direction);
 						var sendToBrowser = JSON.stringify(robotData);
@@ -268,7 +266,7 @@ my_http.createServer(function(request,response) {
 			}
 			else if (matchResults == "rover") {
 				var splitResults = ArduinoString.split(",");
-				//console.log("rover data " + splitResults.length +  "  " + ArduinoString);
+				console.log("rover data " + splitResults.length +  "  " + ArduinoString);
 				robotData.setRoverInfo(ArduinoString);
 				robotData.setLastCommand(splitResults[1]);
 				robotData.setRange(splitResults[5]);
@@ -302,13 +300,10 @@ my_http.createServer(function(request,response) {
 			sendToArduino = new String (  _get.direction).toLowerCase() ;
 			robotData.setLastCommand(sendToArduino);
 			robotData.setReady4Command(false);
-			console.log(sendToArduino);
 		}	
 		else if (_get.engineUpDate) {
-			console.log ("engineUpdate ->" + _get.engine + " " + _get.engineUpDate);
 			var engineSend = "engine" + _get.engineUpDate  + ":" + _get.engine + "\r";
 			sendToArduino = new String (engineSend).toLowerCase() ;
-			consoe.log(sendToArduino);
 		}
 		else if (_get.roverData) {
 			//console.log("roverData xxxxxxxxxxx");
@@ -331,7 +326,6 @@ my_http.createServer(function(request,response) {
 				//console.log ("drain " + sendToArduino);
 				//console.log(err, result);
 			});
-			//console.log ("results -> " + results);
 		});
     }); 
 }).listen(webPort);  
