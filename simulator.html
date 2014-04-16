@@ -1,0 +1,40 @@
+<html>
+<head>
+<title>Rover XR1  Bot - NodeJs - JQuery</title>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+<link rel="stylesheet" href="css/rover.css" />
+ <script src="js/jquery.js"></script>
+ <script src="js/jquery-ui.js"></script>
+ <script src="js/roverNode.js"></script>
+
+</head>
+
+<body>
+
+<div id="forward"><img src="images/forward.jpg" id="forwardImg"/></div>
+<div id="left"><img src="images/left.jpg" id="leftImg" /></div>
+<div id="right"><img src="images/right.jpg" id="rightImg" /></div>
+<div id="back"><img src="images/back.jpg" id="backImg" /></div>
+<div id="stop"><img src="images/stop.jpg" id="stopImg" /></div>
+<div id="status1"></div>
+<div id="status2"></div>
+<div id="status3"></div>
+<div id="status4">
+	<div class="roverdata" id="engineL"></div>
+	<div class="roverdata" id="engineR"></div>
+	<div class="roverdata" id="engineI"></div>
+	<div class="roverdata" id="rangeD"></div>
+</div>
+
+
+<div id="enginebox"> Engine Power
+	<div id="slider-vertical2" style="height:200px;"></div>
+	<div id="slider-vertical3" style="height:200px;"></div>
+	<div id="amount2" style="color:#111111; font-weight:bold;font-size:1.2em" /></div>
+	<div id="amount3" style="color:#ff1111; font-weight:bold;font-size:1.2em" /></div>
+</div>
+<div id="slider-impulseH"  ></div>
+<canvas id="myCanvas" width="550" height="400" style="border:3px solid #030303;background:#000000" /></canvas>
+
+</body>
+</html>
