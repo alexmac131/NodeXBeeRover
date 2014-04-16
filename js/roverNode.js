@@ -146,92 +146,90 @@ $(function() {
   var idsetPrev = "";
   var locationImgPrev = "";
 
-function changeIndicator (idset, locationImg) {
-	if (idsetPrev) {
-		$(idsetPrev).attr('src',locationImgPrev);
-	}	
-	idsetPrev = idset;
-	locationImgPrev = $(idset).attr('src');
-	$(idset).attr('src',locationImg);
-}
-
-var xmlhttp;
-function loadXMLDoc(url, cfunc) {
-	if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
-  	xmlhttp=new XMLHttpRequest();
+  function changeIndicator (idset, locationImg) {
+  	if (idsetPrev) {
+  		$(idsetPrev).attr('src',locationImgPrev);
+  	}	
+  	idsetPrev = idset;
+  	locationImgPrev = $(idset).attr('src');
+  	$(idset).attr('src',locationImg);
   }
-	else {   // code for IE6, IE5
-  	xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  }
-	xmlhttp.onreadystatechange=cfunc;
-	xmlhttp.open("GET",url,true);
-	xmlhttp.send();
-  //console.log(xmlhttp);
-}
 
-function askForDataFromNode(data) {
-	var str = $.param(data);
-	loadXMLDoc("index.html?" + str ,function() {
-  	if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-  		processFeedBack($.parseJSON(xmlhttp.responseText)) ;
+  var xmlhttp;
+  function loadXMLDoc(url, cfunc) {
+  	if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+    	xmlhttp=new XMLHttpRequest();
     }
-  });
-}
-
-function processFeedBack (data) {
- 	$("#status1").text( data.range );
-  if ((data.lastCommand != "roverdata") && ( data.lastCommand != "roverdataroverdata")){
-	   $("#status2").text( data.lastCommand );
+  	else {   // code for IE6, IE5
+    	xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+  	xmlhttp.onreadystatechange=cfunc;
+  	xmlhttp.open("GET",url,true);
+  	xmlhttp.send();
+    //console.log(xmlhttp);
   }
-  
-  if (data.alert) {
-  	$("#status1,#status2,#status3, #status4").css("color", "#FF6802");
-		$("#status3").text( data.alert);
-		changeIndicator("","");
-		return;
-	}	
-	else if (data.lastCommand == "stop") {
-    changeIndicator("","");
-		$("#status2").text( " ");
-		$("#status2,#status1").css("color", "#DE6262");
-	}
-	else { 
-		$("#status1,#status2,#status3").css("color", "#000000");
-		$("#slider-vertical2").slider("value",data.leftEngine);
-		$("#slider-vertical3").slider("value", data.rightEngine);
-	}
-  
-  $("#engineL").text(data.leftEngine);
-  $("#engineR").text(data.rightEngine);
-  $("#engineI").text(data.engineImpulse);
-  $("#rangeD").text(data.range);
-  $("#status3").text(data.Ready4Command);
-  drawScannerData(data.radarData);
 
-}
+  function askForDataFromNode(data) {
+  	var str = $.param(data);
+  	loadXMLDoc("index.html?" + str ,function() {
+    	if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+    		processFeedBack($.parseJSON(xmlhttp.responseText)) ;
+      }
+    });
+  }
 
-function drawScannerData (data) {
-  /* Three phase draw
-    1) draw the outter shell and fill the ranges
-    2) draw the range lines for each 5 degrees
-    3) draw the scanning cone lines
-  */ 
-  var c = document.getElementById("myCanvas");
-  var dataList = new Array();
-  var ctx = c.getContext("2d");
-  ctx.clearRect(0, 0, 550, 400);
+  function processFeedBack (data) {
+   	$("#status1").text( data.range );
+    if ((data.lastCommand != "roverdata") && ( data.lastCommand != "roverdataroverdata")){
+  	   $("#status2").text( data.lastCommand );
+    }
+    
+    if (data.alert) {
+    	$("#status1,#status2,#status3, #status4").css("color", "#FF6802");
+  		$("#status3").text( data.alert);
+  		changeIndicator("","");
+  		return;
+  	}	
+  	else if (data.lastCommand == "stop") {
+      changeIndicator("","");
+  		$("#status2").text( " ");
+  		$("#status2,#status1").css("color", "#DE6262");
+  	}
+  	else { 
+  		$("#status1,#status2,#status3").css("color", "#000000");
+  		$("#slider-vertical2").slider("value",data.leftEngine);
+  		$("#slider-vertical3").slider("value", data.rightEngine);
+  	}
+    
+    $("#engineL").text(data.leftEngine);
+    $("#engineR").text(data.rightEngine);
+    $("#engineI").text(data.engineImpulse);
+    $("#rangeD").text(data.range);
+    $("#status3").text(data.Ready4Command);
+    drawScannerData(data.radarData);
+  }
 
-  var alertFlag = false;
-  $("#status4").text(data.Ready4Command);
-  $("#status3,#status4").css("color", "#000000");
+  function drawScannerData (data) {
+    /* Three phase draw
+      1) draw the outter shell and fill the ranges
+      2) draw the range lines for each 5 degrees
+      3) draw the scanning cone lines
+    */ 
+    var c = document.getElementById("myCanvas");
+    var dataList = new Array();
+    var ctx = c.getContext("2d");
+    ctx.clearRect(0, 0, 550, 400);
 
-  var baseX = 275;
-  var baseY = 400;
-  var baseRatio = .9;
-  ctx.beginPath();
-  dataList = data.split(/,/);
-  ctx.lineTo(baseX,baseY);
-  for (i= 1; i < dataList.length; i++) { 
+    var alertFlag = false;
+    $("#status4").text(data.Ready4Command);
+    $("#status3,#status4").css("color", "#000000");
+    var baseX = 275;
+    var baseY = 400;
+    var baseRatio = .9;
+    ctx.beginPath();
+    datataList = data.split(/,/);
+    ctx.lineTo(baseX,baseY);
+    for (i= 1; i < dataList.length; i++) { 
       var quad = 1;
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 1;
@@ -254,8 +252,8 @@ function drawScannerData (data) {
       }
       //console.log("--->" + x_new + " y---->" + y_new);
       ctx.lineTo(x_new,y_new);
-   }    
-   ctx.lineTo(baseX,baseY);
+    }    
+    ctx.lineTo(baseX,baseY);
 
     ctx.closePath();
     ctx.stroke();
@@ -294,13 +292,8 @@ function drawScannerData (data) {
       "#000000",
       "#ff0000" 
     ];
-
-
-       
-
-    
-      
-for (i= 1; i < dataList.length; i++) {  
+  
+    for (i= 1; i < dataList.length; i++) {  
         quad = 1;
       //ctx.strokeStyle = colors[i] ;
       ctx.lineWidth = 3;
@@ -323,13 +316,10 @@ for (i= 1; i < dataList.length; i++) {
         degree = 180 - degree;
         quad  = 2
       }
-
-
       //console.log("count " +i + "degree " + degree + " color " + colors[i] + " range " + range);
       radian = degree * (3.142 / 180);
       var x_new = range * Math.cos(radian);
       var y_new = baseY - Math.sqrt ( (range * range) - (x_new * x_new));
-
       if (quad === 2) {
           x_new = x_new + baseX;   
       }
@@ -340,57 +330,51 @@ for (i= 1; i < dataList.length; i++) {
       ctx.moveTo(baseX, baseY);
       ctx.lineTo(x_new, y_new);
       ctx.stroke();
-   }  
-   if (alertFlag) {
+    }  
+    if (alertFlag) {
       $("#status3").text("WARN");
       $("#status4").text("RANGE 4");
       $("#status3,#status4").css("color", "#DE6262");
-   }
+    }
 
-// draw outer cone shape not actual readings.
-      var range = 400;
-      radian = 30 * (3.142 / 180);
-      var x_new = range * Math.cos(radian);
-      
-      var y_new = baseY - Math.sqrt ( (range * range) - (x_new * x_new));
-      ctx.strokeStyle = "#FFffFF" ;
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(baseX, baseY);
-      ctx.lineTo((baseX + x_new), y_new);
-      ctx.stroke();
-
-      range = 400;
-      radian = 30 * (3.142 / 180);
-      x_new = range * Math.cos(radian);
-      
-      y_new = baseY - Math.sqrt ( (range * range) - (x_new * x_new));
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(baseX, baseY);
-      ctx.lineTo((baseX - x_new), y_new);
-      ctx.stroke();
-
+    // draw outer cone shape not actual readings.
+    var range = 400;
+    radian = 30 * (3.142 / 180);
+    var x_new = range * Math.cos(radian);
     
+    var y_new = baseY - Math.sqrt ( (range * range) - (x_new * x_new));
+    ctx.strokeStyle = "#FFffFF" ;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(baseX, baseY);
+    ctx.lineTo((baseX + x_new), y_new);
+    ctx.stroke();
 
-}
+    range = 400;
+    radian = 30 * (3.142 / 180);
+    x_new = range * Math.cos(radian);
+    
+    y_new = baseY - Math.sqrt ( (range * range) - (x_new * x_new));
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(baseX, baseY);
+    ctx.lineTo((baseX - x_new), y_new);
+    ctx.stroke();
+  }
 
-function roverOverLay (status) {
-  var c = document.getElementById("myCanvas");
-  var dataList = new Array();
-  var ctx = c.getContext("2d");
+  function roverOverLay (status) {
+    var c = document.getElementById("myCanvas");
+    var dataList = new Array();
+    var ctx = c.getContext("2d");
 
-  var baseX = 275;
-  var baseY = 400;
-  var baseRatio = .9;
-  ctx.beginPath();
-
-      ctx.fillStyle = '#ff6600';
-      ctx.fillRect(baseX - (10 *baseRatio),baseY-(50*baseRatio),(20 * baseRatio),(50*baseRatio));
-      ctx.stroke();
-
-
-}
+    var baseX = 275;
+    var baseY = 400;
+    var baseRatio = .9;
+    ctx.beginPath();
+    ctx.fillStyle = '#ff6600';
+    ctx.fillRect(baseX - (10 *baseRatio),baseY-(50*baseRatio),(20 * baseRatio),(50*baseRatio));
+    ctx.stroke();
+  }
 
 });
 
