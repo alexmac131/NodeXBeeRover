@@ -1,149 +1,150 @@
 $(function() {
 
-
-   //alert (navigator.userAgent) ;
-   var re = /(ipad|iphone)/i;
-   var match = re.exec(navigator.userAgent);
-   if (match) {
+  // check for ipad or iphone browsers and hide the 
+  // slider controls
+  var re = /(ipad|iphone)/i;
+  var match = re.exec(navigator.userAgent);
+  if (match) {
     $("#slider-impulseH").hide();
     $("#slider-vertical2").hide();
     $("#slider-vertical3").hide();
+  }
 
+  // default radar screen properties.
 
-   }
+  cssSet = { 
+        "width": 550,  
+        'visibility':'visible',
+        "height": 400, 
+        "z-index": 0, 
+        "top": 50, 
+        "right": 1,
+        "position": "absolute"  
+  };
+  $("#myCanvas").css(cssSet);
 
-    cssSet = { 
-          "width": 550,  
-          'visibility':'visible',
-          "height": 400, 
-          "z-index": 0, 
-          "top": 50, 
-          "right": 1,
-          "position": "absolute"  
-    };
-    $("#myCanvas").css(cssSet);
-
-    var sizeFlag = 0;
-    // $("#closeMessage").show();
-    var myVar = setInterval(function(){
-      //console.log("interval call")
-      askForDataFromNode({roverData:1});
-    },
-    1500);
+  // set the update request to 1500 ms
+  // This gets the tank data etc 
+  // AskforDataFromNode sets all the variables for the tank from the server
+  var sizeFlag = 0;
+  var myVar = setInterval(function(){
+    askForDataFromNode({roverData:1});
+  }, 1500);
 	  
-    $("#forward").click(function(){
-    	changeIndicator('#forwardImg', 'images/forward_green.jpg');
-    	askForDataFromNode  ({color:"#ffffff",direction:"forward"});
-    	askForDataFromNode  ({roverData:1});
-    });
-
-    $("#myCanvas").click(function(){
-      if (sizeFlag == 1) {
-        console.log("setting smaller");
-        cssSet = {  
-          "width": 550,  
-          'visibility':'visible',
-          "height": 400, 
-          "z-index": 0, 
-          "top": 50, 
-          "right": 1,
-          "position": "absolute"  
-        };
-        $("#myCanvas").css(cssSet);
-        sizeFlag = 0;
+  // canvas click, that enlarges the radar
+  $("#myCanvas").click(function(){
+  
+    if (sizeFlag == 1) {
+      console.log("setting smaller");
+      cssSet = {  
+        "width": 550,  
+        'visibility':'visible',
+        "height": 400, 
+        "z-index": 0, 
+        "top": 50, 
+        "right": 1,
+        "position": "absolute"  
+      };
+      $("#myCanvas").css(cssSet);
+      // flag signals signals radar is small map
+      sizeFlag = 0;
       
-      } 
-      else {
-      
-        var y =  $.getDocHeight() ;
-        var x  = $.getDocWidth() ;   
-         cssSet = {  
-          "width": x,  
-          'visibility':'visible',
-          "height": y, 
-          "z-index": 0, 
-          "top": 1, 
-          "right": 1,
-          "position": "absolute",
-          "z-index": 3  
-        };
-       
-        $("#myCanvas").css(cssSet);
-        sizeFlag = 1;
-      }
-      
-    });
+    } 
+    else {
+      // set the windows to full size
+      var y =  $.getDocHeight() ;
+      var x  = $.getDocWidth() ;   
+       cssSet = {  
+        "width": x,  
+        'visibility':'visible',
+        "height": y, 
+        "z-index": 0, 
+        "top": 1, 
+        "right": 1,
+        "position": "absolute",
+        "z-index": 3  
+      };
+      $("#myCanvas").css(cssSet);
+      // flag signals signals radar is large map
+      sizeFlag = 1;
+    }    
+  });
 
-    $("#back").click(function(){
-           changeIndicator('#backImg', 'images/back_green.jpg');
-           askForDataFromNode  ({color:"#ffffff",direction:"back"});
-           askForDataFromNode  ({roverData:1});
-    });
-    $("#left").click(function(){
-    	changeIndicator('#leftImg', 'images/left_green.jpg');
-    	askForDataFromNode  ({color:"#ffffff",direction:"left"});
-        askForDataFromNode  ({roverData:1});
-    });
-    $("#right").click(function(){
-    	changeIndicator('#rightImg', 'images/right_green.jpg');
-    	askForDataFromNode ({color:"#ffffff",direction:"right"});
-        askForDataFromNode  ({roverData:1});
-    });
-    $("#stop").click(function(){
-		 changeIndicator("", "");
-     askForDataFromNode  ({roverData:1});
-    }); 
+  // click event.
+  $("#forward").click(function(){
+    changeIndicator('#forwardImg', 'images/forward_green.jpg');
+    askForDataFromNode  ({color:"#ffffff",direction:"forward"});
+  });
 
-    $("#slider-impulseH").slider({
-  		orientation: "hortizonal",
-  		range: "min",
-  		min: 300,
-  		max: 2500,
-  		step: 100,
-  		value: 500,
-  		slide: function( event, ui ) {
-    		$( "#engineI" ).text( ui.value );
-			  askForDataFromNode ({engine:ui.value,engineUpDate:"power"});
-  		},
-		  change: function( event, ui ) {
-			 $( "#engineI" ).text( ui.value );
-		  }
-    });
+  $("#back").click(function(){
+    changeIndicator('#backImg', 'images/back_green.jpg');
+    askForDataFromNode  ({color:"#ffffff",direction:"back"});
+  });
 
+  $("#left").click(function(){
+  	changeIndicator('#leftImg', 'images/left_green.jpg');
+  	askForDataFromNode  ({color:"#ffffff",direction:"left"});
+  });
+
+  $("#right").click(function(){
+  	changeIndicator('#rightImg', 'images/right_green.jpg');
+  	askForDataFromNode ({color:"#ffffff",direction:"right"});
+  });
+
+  $("#stop").click(function(){
+		changeIndicator("", "");
+  }); 
+
+  // sliders do not work on tablets
+  $("#slider-impulseH").slider({
+		orientation: "hortizonal",
+		range: "min",
+		min: 300,
+		max: 2500,
+		step: 100,
+		value: 500,
+		slide: function( event, ui ) {
+  		$( "#engineI" ).text( ui.value );
+		  askForDataFromNode ({engine:ui.value,engineUpDate:"power"});
+		},
+	  change: function( event, ui ) {
+		 $( "#engineI" ).text( ui.value );
+	  }
+  });
 
 	$("#slider-vertical2").slider({
-  		orientation: "vertical",
-  		range: "min",
-  		min: 0,
-  		max: 255,
-  		value: 60,
-  		slide: function( event, ui ) {
-    		$( "#amount2" ).text( ui.value );
-		    askForDataFromNode ({engine:ui.value,engineUpDate:"left"});
-  		},
-		  change: function( event, ui ) {
-			 $( "#amount2" ).text( ui.value );
-		  }
-    });
+		orientation: "vertical",
+		range: "min",
+		min: 0,
+		max: 255,
+		value: 60,
+		slide: function( event, ui ) {
+  		$( "#amount2" ).text( ui.value );
+	    askForDataFromNode ({engine:ui.value,engineUpDate:"left"});
+		},
+	  change: function( event, ui ) {
+		  $( "#amount2" ).text( ui.value );
+	  }
+  });
 
 	$("#slider-vertical3").slider({
-  		orientation: "vertical",
-  		range: "min",
-  		min: 0,
-  		max: 255,
-  		value: 60,
-  		slide: function( event, ui ) {
-    		$( "#amount3" ).text( ui.value );
-			  askForDataFromNode ({engine:ui.value,engineUpDate:"right"});
-	    },
-		  change: function( event, ui ) {
-    		$( "#amount3" ).text( ui.value );
-		  }
+		orientation: "vertical",
+		range: "min",
+		min: 0,
+		max: 255,
+		value: 60,
+		slide: function( event, ui ) {
+  		$( "#amount3" ).text( ui.value );
+		  askForDataFromNode ({engine:ui.value,engineUpDate:"right"});
+    },
+	  change: function( event, ui ) {
+  		$( "#amount3" ).text( ui.value );
+	  }
 	});
 
 
-var idsetPrev = "";
-var locationImgPrev = "";
+  var idsetPrev = "";
+  var locationImgPrev = "";
 
 function changeIndicator (idset, locationImg) {
 	if (idsetPrev) {
@@ -165,7 +166,7 @@ function loadXMLDoc(url, cfunc) {
 	xmlhttp.onreadystatechange=cfunc;
 	xmlhttp.open("GET",url,true);
 	xmlhttp.send();
-  console.log(xmlhttp);
+  //console.log(xmlhttp);
 }
 
 function askForDataFromNode(data) {
@@ -178,11 +179,7 @@ function askForDataFromNode(data) {
 }
 
 function processFeedBack (data) {
-  console.log ("------------");
-  console.log(data);
-  console.log ("------------");
-
-	$("#status1").text( data.range );
+ 	$("#status1").text( data.range );
   if ((data.lastCommand != "roverdata") && ( data.lastCommand != "roverdataroverdata")){
 	   $("#status2").text( data.lastCommand );
   }
@@ -190,7 +187,7 @@ function processFeedBack (data) {
   if (data.alert) {
   	$("#status1,#status2,#status3, #status4").css("color", "#FF6802");
 		$("#status3").text( data.alert);
-		// changeIndicator("","");
+		changeIndicator("","");
 		return;
 	}	
 	else if (data.lastCommand == "stop") {
@@ -214,6 +211,11 @@ function processFeedBack (data) {
 }
 
 function drawScannerData (data) {
+  /* Three phase draw
+    1) draw the outter shell and fill the ranges
+    2) draw the range lines for each 5 degrees
+    3) draw the scanning cone lines
+  */ 
   var c = document.getElementById("myCanvas");
   var dataList = new Array();
   var ctx = c.getContext("2d");
