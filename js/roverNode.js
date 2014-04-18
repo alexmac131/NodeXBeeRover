@@ -18,11 +18,11 @@
 
 
 $(function() {
+  // when document loads this jquery docuement body runs.
 
   // check for ipad or iphone browsers and hide the 
-  // slider controls
-
-  
+  // slider controls  the do not work on the ipad but 
+  // can still drive the rover with those devices
   var match = re.exec(navigator.userAgent);
   if (match) {
     $("#slider-impulseH").hide();
@@ -30,12 +30,14 @@ $(function() {
     $("#slider-vertical3").hide();
   }
 
+  // set the canvas to default values
+  // we do use this for zooming in later
   $("#myCanvas").css(cssSetDefault);
-
+  var sizeFlag = 0;
   // set the update request to 1500 ms
   // This gets the tank data etc 
   // AskforDataFromNode sets all the variables for the tank from the server
-  var sizeFlag = 0;
+ 
   var myVar = setInterval(function(){
     askForDataFromNode({roverData:1});
   }, 1500);
@@ -57,7 +59,6 @@ $(function() {
   });
 
   $("#right").click(function(){
-    console.log("right ");
   	changeIndicator('#rightImg', 'images/right_green.jpg');
   	askForDataFromNode ({color:"#ffffff",direction:"right"});
   });
@@ -114,13 +115,14 @@ $(function() {
 	});
 
    // canvas click, that enlarges the radar
+   // this acts like a detail zoon for the radar
+   // we use the sizeflag so when clicked we can return to 
+   // normal "default"
   $("#myCanvas").click(function(){
     if (sizeFlag == 1) {
-      console.log("setting smaller");
       $("#myCanvas").css(cssSetDefault);
       // flag signals signals radar is small map
       sizeFlag = 0;
-      
     } 
     else {
       // set the windows to full size
@@ -142,8 +144,9 @@ $(function() {
     }    
   });
 
-
+  /* changes the colours to active  */
   function changeIndicator (idset, locationImg) {
+
   	if (idsetPrev) {
   		$(idsetPrev).attr('src',locationImgPrev);
   	}	
@@ -176,6 +179,9 @@ $(function() {
   }
 
   function processFeedBack (data) {
+    // this is the core of changing the data that 
+    // is feedback from the node server or the rover
+
    	$("#status1").text( data.range );
     if ((data.lastCommand != "roverdata") && ( data.lastCommand != "roverdataroverdata")){
   	   $("#status2").text( data.lastCommand );
@@ -229,6 +235,8 @@ $(function() {
 
 
     ctx.lineTo(baseX,baseY);
+    // draw the outter limit of determiend clear range
+    // fill it in with grey
     for (i= 1; i < dataList.length; i++) { 
       var quad = 1;
       ctx.strokeStyle = '#ffffff';
@@ -261,26 +269,24 @@ $(function() {
     ctx.fill();
     ctx.stroke();
 
-    ctx.fillStyle = '#ff6600';
-    //ctx.fillRect(baseX - (10 *baseRatio),baseY-(50*baseRatio),(10 * baseRatio),(20*baseRatio));
-    ctx.stroke();
+    // radar spoke colours for the range lines
     var colors = [
-      "#ff0000",
-      "#ff0000",
-      "#000000",
-      "#ff0000",
-      "#000000",
-      "#ff0000",
-      "#000000",
-      "#ff0000",
+      "#ff0000", //25
+      "#ff0000", //30
+      "#000000", //35
+      "#ff0000", //40
+      "#000000", //45 
+      "#ff0000", //50
+      "#000000", //55
+      "#ff0000", //60
       "#000000",  //65
-      "#ff0000",
-      "#000000",
-      "#ffff00",
-      "#ff00ff",
-      "#ffffff", //90
-      "#ff00ff",
-      "#ffff00",
+      "#ff0000",  //70
+      "#000000", //75
+      "#ffff00", //80
+      "#ff00ff", // 85
+      "#ffffff", // 90
+      "#ff00ff", // 95
+      "#ffff00", // 100
       "#ffff00",
       "#ff0000",
       "#000000",
@@ -295,9 +301,13 @@ $(function() {
   
     for (i= 1; i < dataList.length; i++) {  
         quad = 1;
-      //ctx.strokeStyle = colors[i] ;
+      
+
+
       ctx.lineWidth = 3;
+
       range = (dataList[i] * baseRatio);
+      // over ride the colours for range lines
       if (range < 30) {
          ctx.strokeStyle = "#ff0000" ;
       }
@@ -312,6 +322,8 @@ $(function() {
       if (degree >= 85 && degree <= 95 && range <= 40) {
           alertFlag = true;
       }
+      // graph is Cartesian coordinate system quadran system
+      // Quadrant 4 and 1 , when first draw in 4 and then quad 2
       if (degree > 90) {
         degree = 180 - degree;
         quad  = 2
@@ -363,6 +375,7 @@ $(function() {
   }
 
   function roverOverLay (status) {
+    // when called will draw a orange box on the overlay
     var c = document.getElementById("myCanvas");
     var dataList = new Array();
     var ctx = c.getContext("2d");
@@ -379,6 +392,7 @@ $(function() {
 });
 
 $.getDocHeight = function(){
+  // this gets back the proper size  of the body height in any browser.
         var db = document.body;
         var dde = document.documentElement;
     return Math.min( db.scrollHeight, dde.scrollHeight, db.offsetHeight,
@@ -388,6 +402,7 @@ $.getDocHeight = function(){
 };
 
 $.getDocWidth = function(){
+    // this gets back the proper size  of the body width in any browser.
         var db = document.body;
         var dde = document.documentElement;
         return Math.min( db.scrollWidth, dde.scrollWidth, db.offsetWidth,
