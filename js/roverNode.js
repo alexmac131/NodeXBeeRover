@@ -1,18 +1,4 @@
-$(function() {
-
-  // check for ipad or iphone browsers and hide the 
-  // slider controls
-  var re = /(ipad|iphone)/i;
-  var match = re.exec(navigator.userAgent);
-  if (match) {
-    $("#slider-impulseH").hide();
-    $("#slider-vertical2").hide();
-    $("#slider-vertical3").hide();
-  }
-
-  // default radar screen properties.
-
-  cssSet = { 
+  var cssSetDefault = {  
         "width": 550,  
         'visibility':'visible',
         "height": 400, 
@@ -20,8 +6,31 @@ $(function() {
         "top": 50, 
         "right": 1,
         "position": "absolute"  
-  };
-  $("#myCanvas").css(cssSet);
+      };
+
+  var engineMin = 0;
+  var engineMax = 255;
+  var idsetPrev = "";
+  var locationImgPrev = "";
+  var xmlhttp;
+  var sizeFlag = 0;
+  var re = /(ipad|iphone)/i;
+
+
+$(function() {
+
+  // check for ipad or iphone browsers and hide the 
+  // slider controls
+
+  
+  var match = re.exec(navigator.userAgent);
+  if (match) {
+    $("#slider-impulseH").hide();
+    $("#slider-vertical2").hide();
+    $("#slider-vertical3").hide();
+  }
+
+  $("#myCanvas").css(cssSetDefault);
 
   // set the update request to 1500 ms
   // This gets the tank data etc 
@@ -30,45 +39,6 @@ $(function() {
   var myVar = setInterval(function(){
     askForDataFromNode({roverData:1});
   }, 1500);
-	  
-  // canvas click, that enlarges the radar
-  $("#myCanvas").click(function(){
-  
-    if (sizeFlag == 1) {
-      console.log("setting smaller");
-      cssSet = {  
-        "width": 550,  
-        'visibility':'visible',
-        "height": 400, 
-        "z-index": 0, 
-        "top": 50, 
-        "right": 1,
-        "position": "absolute"  
-      };
-      $("#myCanvas").css(cssSet);
-      // flag signals signals radar is small map
-      sizeFlag = 0;
-      
-    } 
-    else {
-      // set the windows to full size
-      var y =  $.getDocHeight() ;
-      var x  = $.getDocWidth() ;   
-       cssSet = {  
-        "width": x,  
-        'visibility':'visible',
-        "height": y, 
-        "z-index": 0, 
-        "top": 1, 
-        "right": 1,
-        "position": "absolute",
-        "z-index": 3  
-      };
-      $("#myCanvas").css(cssSet);
-      // flag signals signals radar is large map
-      sizeFlag = 1;
-    }    
-  });
 
   // click event.
   $("#forward").click(function(){
@@ -87,6 +57,7 @@ $(function() {
   });
 
   $("#right").click(function(){
+    console.log("right ");
   	changeIndicator('#rightImg', 'images/right_green.jpg');
   	askForDataFromNode ({color:"#ffffff",direction:"right"});
   });
@@ -115,8 +86,8 @@ $(function() {
 	$("#slider-vertical2").slider({
 		orientation: "vertical",
 		range: "min",
-		min: 0,
-		max: 255,
+		min: engineMin,
+		max: engineMax,
 		value: 60,
 		slide: function( event, ui ) {
   		$( "#amount2" ).text( ui.value );
@@ -130,8 +101,8 @@ $(function() {
 	$("#slider-vertical3").slider({
 		orientation: "vertical",
 		range: "min",
-		min: 0,
-		max: 255,
+		min: engineMin,
+		max: engineMax,
 		value: 60,
 		slide: function( event, ui ) {
   		$( "#amount3" ).text( ui.value );
@@ -142,9 +113,35 @@ $(function() {
 	  }
 	});
 
+   // canvas click, that enlarges the radar
+  $("#myCanvas").click(function(){
+    if (sizeFlag == 1) {
+      console.log("setting smaller");
+      $("#myCanvas").css(cssSetDefault);
+      // flag signals signals radar is small map
+      sizeFlag = 0;
+      
+    } 
+    else {
+      // set the windows to full size
+      var y =  $.getDocHeight() ;
+      var x  = $.getDocWidth() ;   
+       cssSet = {  
+        "width": x,  
+        'visibility':'visible',
+        "height": y, 
+        "z-index": 0, 
+        "top": 1, 
+        "right": 1,
+        "position": "absolute",
+        "z-index": 3  
+      };
+      $("#myCanvas").css(cssSet);
+      // flag signals signals radar is large map
+      sizeFlag = 1;
+    }    
+  });
 
-  var idsetPrev = "";
-  var locationImgPrev = "";
 
   function changeIndicator (idset, locationImg) {
   	if (idsetPrev) {
@@ -218,6 +215,7 @@ $(function() {
     var c = document.getElementById("myCanvas");
     var dataList = new Array();
     var ctx = c.getContext("2d");
+    //console.log(data);
     ctx.clearRect(0, 0, 550, 400);
 
     var alertFlag = false;
@@ -227,14 +225,16 @@ $(function() {
     var baseY = 400;
     var baseRatio = .9;
     ctx.beginPath();
-    datataList = data.split(/,/);
+    dataList = data.split(/,/);
+
+
     ctx.lineTo(baseX,baseY);
     for (i= 1; i < dataList.length; i++) { 
       var quad = 1;
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 1;
       range = (dataList[i] * baseRatio);
-      degree = 25 + (i * 5);
+      degree = 20 + (i * 5);
       if (degree > 90) {
         degree = 180 - degree;
         quad  = 2

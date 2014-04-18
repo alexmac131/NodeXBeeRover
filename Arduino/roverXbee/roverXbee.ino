@@ -12,22 +12,27 @@ const int minRange = 30;
 
 struct robotState {
  
- unsigned int turnPowerA;
- unsigned int  turnPowerB;
- unsigned int  turnDelay;
- unsigned int turnPowerASaved;
- unsigned int  turnPowerBSaved;
- unsigned int  turnDelaySaved;
- boolean overRide ;
- unsigned int range;
- int RangeArray[25];
- String rangeData;
- String lastCommand;
+   unsigned int turnPowerA;
+   unsigned int  turnPowerB;
+   unsigned int  turnDelay;
+   unsigned int turnPowerASaved;
+   unsigned int  turnPowerBSaved;
+   unsigned int  turnDelaySaved;
+   boolean overRide ;
+   unsigned int rangeFront;
+   int RangeArray[30];
+   String lastCommand;
 };
 typedef struct robotState RoverData;
 RoverData robot;
 
 void setup() {
+  
+  Serial.begin(9600);;
+  Serial.println("----------------- ");
+  Serial.println("| starting setup  |");
+  Serial.println("------------------");
+
   robot.overRide = false;
   myservo.attach(servoPin);
   pinMode(pwm_a, OUTPUT);  //Set control pins to be outputs
@@ -36,10 +41,14 @@ void setup() {
   pinMode(dir_a, OUTPUT);
   pinMode(dir_b, OUTPUT);
   
-  Serial.begin(9600);;
   setDefaults ();
+  //Serial.println("sweep");
   radarSweep();
+  //Serial.println("done sweep");
+  //Serial.println("data");
+  
   sendBackData ();
+  //Serial.println("data done");
   Serial.println("-----------");
   Serial.println("setup ready ");
   Serial.println("-----------");
@@ -62,10 +71,10 @@ void directionSet (char direct) {
   
   if (robot.overRide) {
     //Serial.println("we have an override");
-    if (robot.range <= minRange ) {
+    if (robot.rangeFront <= minRange ) {
       
       //Serial.println("we have an override ABORT");
-      Serial.println ("ALERT,Sonar, "+ String(robot.range));
+      Serial.println ("ALERT,Sonar, "+ String(robot.rangeFront));
       robot.overRide = false;
       return;
     }
@@ -89,8 +98,8 @@ void directionSet (char direct) {
   }
   
   
-  if (robot.range <= minRange && direct == 'F') {
-    Serial.println ("ALERT,Sonar, "+ String(robot.range));
+  if (robot.rangeFront <= minRange && direct == 'F') {
+    Serial.println ("ALERT,Sonar, "+ String(robot.rangeFront));
     return;
   }
 
@@ -269,7 +278,6 @@ boolean checkForCommands () {
 void sendRadarData () {
   Serial.print("radar,");
   for (int c = 0; c < 25; c++) {
-    // r obot.rangeData .=  212,22,2,222,22252,2424521,11
     Serial.print(robot.RangeArray[c]);
     if (c < 24) {
      Serial.print(",");
@@ -279,23 +287,21 @@ void sendRadarData () {
 }
 
 void sendBackData () {
-  String Message  =  "rover," + robot.lastCommand + "," + String(robot.turnPowerA)  + "," + String(robot.turnPowerB) + "," + String(robot.turnDelay) + "," + String(robot.range);
+  String Message  =  "rover," + robot.lastCommand + "," + String(robot.turnPowerA)  + "," 
+  + String(robot.turnPowerB) + "," + String(robot.turnDelay) + "," + String(robot.rangeFront);
   Serial.println(Message);  
   
 }
 
 void radarSweep () {  
+  // We need to save power on any given load so we detach the servo for readings and reattach servo to move it
   int pos = 0;
-  //myservo.write(90);
-  //delay(19000);
-  //Serial.println(direct);
-  int count = 0;
-  for(pos = 25; pos <= 155; pos += 5)  // goes from 0 degrees to 180 degrees 
-  {                  
-    // in steps of 1 degree 
+  int count = 1;
+  for(pos = 25; pos <= 155; pos += 5) {                  
     //Serial.print(pos);
     // Serial.print(" ");
     myservo.attach(servoPin);
+    delay (100);
     myservo.write(pos);     // tell servo to go to position in variable 'pos'
     delay(200);
     myservo.detach();
@@ -310,8 +316,9 @@ void radarSweep () {
   myservo.write(90);
   delay(200);
   myservo.detach();
+  //Serial.println("servo detached");
 
-  robot.range = robot.RangeArray[12];    
+  robot.rangeFront = robot.RangeArray[12];    
   sendRadarData();
   delay(200);
   Serial.println("ready4cmd");
@@ -319,16 +326,12 @@ void radarSweep () {
 
 void setDefaults () {
   robot.turnPowerA = 100;
-  robot.turnPowerB;
-  robot.turnDelay;
-  robot.turnPowerASaved;
-  robot.turnPowerBSaved;
-  robot.turnDelaySaved;
+  robot.turnPowerB = 100;
+  robot.turnDelay = 1000;
+  robot.turnPowerASaved = 0;
+  robot.turnPowerBSaved = 0;
+  robot.turnDelaySaved = 0;
   robot.overRide = false; 
-  robot.range = 10;
-  robot.RangeArray[0] = 0;
-  robot.rangeData = "";
-  robot.lastCommand = "";
-  
-  
+  robot.rangeFront = 10;
+  robot.lastCommand = "Start Rover";
 }

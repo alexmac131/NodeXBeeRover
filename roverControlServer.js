@@ -120,11 +120,11 @@ function roverDataInit() {
 }
 var webPort = 8084;
 var robotData = new roverDataInit();
-//var comPort = "/dev/tty.usbserial-A900fwHn";
+var comPort = "/dev/tty.usbserial-A900fwHn";
 var serialport = require("serialport");
 var SerialPort = serialport.SerialPort; // localize object constructor
 
-serialport.list(function (err, ports) {
+/* serialport.list(function (err, ports) {
    var FTDIFlag = false;
    ports.forEach(function(port) {
    if (ports.manufacturer == "FTDI") {
@@ -149,7 +149,7 @@ serialport.list(function (err, ports) {
 	console.log(test);
  
 });
-
+*/
 // this try is not catching the error and I am still working on the error event 
 
 	var sp = new SerialPort(robotData.getCommPort(), {
@@ -159,20 +159,15 @@ serialport.list(function (err, ports) {
   			//console.log("error aaa" + err + "\n" + "message" + message);ß
   		}
 	});
-	sp.on("open", function () {
+  
+
+
+ sp.on("open", function () {
     sp.write(0x80);
     sp.write('123456\r');
     console.log ("comm port ready");
     
-	});
-
-
-/* sp.on("open", function () {
-    sp.write(0x80);
-    sp.write('123456\r');
-    console.log ("comm port ready");
-    
-}); */
+}); 
 
 
 // create the webservice listener on the webport 
@@ -184,6 +179,8 @@ my_http.createServer(function(request,response) {
     var full_path = path.join(process.cwd(),my_path);  
 	
     path.exists(full_path,function(exists) {  
+
+    	console.log("test -> ");
     
        	if(!exists) {  
            		response.writeHeader(404, {"Content-Type": "text/plain"});    
