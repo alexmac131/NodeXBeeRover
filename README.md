@@ -83,16 +83,28 @@ should result in the following message
 
 ___
 ### To Do
-
- - Ready the documentation, add tags to the code, add event handling and the science package to the code.
+ - Grunt / Task Runner Script to help install all the software dependancies
+ - Ready the documentation, 
+ - add tags to the code and commenting
+ - Add event handling 
+ - Science package to the code.
  - the README file itself has format issues so I need to learn how to format to my liking.
  - Better event handling for various error types from nodeJs and the Client side JavaScript.
- - Engine power updates to the robot. Since the Rover  treads are a bit quirky this allows the driver to adjust the power to the drive sprocket and just the course of the Rover. Otherwise the Rover  will drive with a curve.
- - Engine Impulse delay to the robot. The driver can adjust the length of time the command issued is executed on the Rover itself.
- - Create a Data structure that can pass easily between the robot and the client interface.
  - Better images for the read me. 
  - A flow diagram describing how the whole product works.
  - Add thermal sensors, arm and camera.
+ - Add cat Whiskers to detect near objects
+ - Whiskers to determine surface type like sand, gravel, rock etc.  
+ - Whiskers to determine terrain shape around the rover
+ - History of Map generation of all scans
+ - History could also try to guess on shapes bassed on Command history and maps
+___
+### Wish List
+ - Baby Rovers that can be sent out and retrieved 
+ - More Arduinos for Processing locally to the Rover
+ - Wind direction and speed sensors
+ - wheel tracking so I can have a memory of distance
+
  
 
 
