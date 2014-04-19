@@ -98,6 +98,8 @@ ___
  - Whiskers to determine terrain shape around the rover
  - History of Map generation of all scans
  - History could also try to guess on shapes bassed on Command history and maps
+
+
 ___
 ### Wish List
  - Baby Rovers that can be sent out and retrieved 
