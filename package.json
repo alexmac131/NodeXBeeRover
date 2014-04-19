@@ -1,0 +1,25 @@
+{
+  "name": "RoverJs",
+  "version": "0.0.0",
+  "description": "This is a node and javascript rover ",
+  "main": "roverControlServer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexmac131/NodeXbeeTank.git"
+  },
+  "keywords": [
+    "Arduino",
+    "Node",
+    "Javascript",
+    "Nasa"
+  ],
+  "author": "Alex Mackinnon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alexmac131/NodeXbeeTank/issues"
+  },
+  "homepage": "https://github.com/alexmac131/NodeXbeeTank"
+}
