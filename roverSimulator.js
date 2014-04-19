@@ -120,59 +120,15 @@ function roverDataInit() {
 }
 var webPort = 8084;
 var robotData = new roverDataInit();
-//var comPort = "/dev/tty.usbserial-A900fwHn";
-var serialport = require("serialport");
-var SerialPort = serialport.SerialPort; // localize object constructor
 
-serialport.list(function (err, ports) {
-   var FTDIFlag = false;
-   ports.forEach(function(port) {
-   if (ports.manufacturer == "FTDI") {
-  		FTDIFlag = true;
-  		robotData.setCommPort(ports.comName);
-  		console.log(ports.comName + "-----");
-  		return;
-  	}
-  	
-  	if (FTDIFlag == false && ports.vendorId == '0x2341') {
-  		robotData.setCommPort(ports.comName);
-  		//console.log(port.comName);
-
-  	}
-  	//console.log(port);
-  	//console.log(port.comName);
-  	//console.log(port.vendorId);
-  });
-  
-	var test = robotData.getCommPort();
-		console.log("test --->");
-	console.log(test);
  
-});
 
 // this try is not catching the error and I am still working on the error event 
 
-	var sp = new SerialPort(robotData.getCommPort(), {
-	  	parser: serialport.parsers.readline(),
-  		baudrate: 9600,
-  		error: function( error, messsage) { 
-  			//console.log("error aaa" + err + "\n" + "message" + message);ß
-  		}
-	});
-	sp.on("open", function () {
-    sp.write(0x80);
-    sp.write('123456\r');
-    console.log ("comm port ready");
-    
-	});
+----> set rover
+----> Build grid
+----> place rover randomly on grid inside a certain bounds
 
-
-/* sp.on("open", function () {
-    sp.write(0x80);
-    sp.write('123456\r');
-    console.log ("comm port ready");
-    
-}); */
 
 
 // create the webservice listener on the webport 
@@ -242,8 +198,8 @@ my_http.createServer(function(request,response) {
             });  
        	}  
     });  
-
- 	sp.on('data', function (arduinoData) {
+-----> event when the rover simulator changes call this
+ 	//sp.on('data', function (arduinoData) {
 
  		//console.log("\n\n\n----\ntest serial from Arduino \n------ \n\n\n")
 		if (arduinoData.length < 2) {
@@ -321,12 +277,8 @@ my_http.createServer(function(request,response) {
 
 		//console.log ("sending ... we hope.  ->> " + sendToArduino + "<--- ");
 		sendToArduino = sendToArduino + "\r";
-		sp.write(sendToArduino , function(err, results) {
-			sp.drain(function(err, result){
-				//console.log ("drain " + sendToArduino);
-				//console.log(err, result);
-			});
-		});
+
+		-----> replace with call to arduino simulator input
     }); 
 }).listen(webPort);  
 sys.puts("Server Running on " + webPort);           
