@@ -23,58 +23,59 @@ function roverDataInit() {
 
 	this.setReady4Command=function(bool){
 		if (bool == true) {
-     		this.Ready4Command = "ready";
-     	}
-     	else {
-     		this.Ready4Command = "busy";
-     	}
-    };
+     	this.Ready4Command = "ready";
+    }
+    else {
+     	this.Ready4Command = "busy";
+    }
+  }
 	this.getReady4Command = function(){
-     	return this.Ready4Command;
-    };    
+     		return this.Ready4Command;
+  }    
 
 
 	this.setLastCommand=function(strValue){
-     	this.lastCommand=strValue;
-    };
+     		this.lastCommand=strValue;
+  }
 	this.getLastCommand = function(){
-     	return this.lastCommand;
-    };    
+     		return this.lastCommand;
+  }    
 
-    this.setRadarData=function(strValue){
-    	//console.log("reading roverdata" + strValue);
-     	this.radarData=strValue;
-    };
+  this.setRadarData=function(strValue){
+    //console.log("reading roverdata" + strValue);
+    this.radarData=strValue;
+  }
 	this.getRadarData = function(){
 		//console.log("getting radar data");
-     	return this.radarData;
-    };    
+    return this.radarData;
+  }    
 
 	
 	this.setHeartBeat = function  (strValue) {
 		this.Status = signal;	
-	};
+	}
 	this.getHeartBeat = function() {
 		return this.Status;
-    }	
+  }	
 
 	this.setRange=function(strValue) {
 		this.range = strValue;
-	};
+	}
+
 	this.getRange=function(strValue) {
      		return this.range;
 	}
 
 	this.setAlert=function(strValue) {
 		this.alert = strValue;
-	};	
+	}	
 	this.getAlert=function(strValue) {
      		return this.alert;
 	}
 
 	this.setRoverInfo=function(strValue) {
 		this.roverMessage = strValue;
-	};	
+	}	
 	this.getRoverInfo=function(strValue) {
      		return this.roverMessage;
 	}
@@ -89,21 +90,20 @@ function roverDataInit() {
 
 	this.setEngineLeft=function(strValue) {
 		this.leftEngine= strValue;
-	};	
+	}	
 	this.getEngineLeft=function(strValue) {
-     	return this.leftEngine;
+ 	    	return this.leftEngine;
 	}
-
 	this.setEngineRight=function(strValue) {
 		this.rightEngine = strValue;
-	};	
+	}	
 	this.getEngineRight=function(strValue) {
-     	return this.rightEngine;
+     		return this.rightEngine;
 	}
 
 	this.setEngineImpulse = function(strValue) {
 		this.engineImpulse = strValue;
-	};	
+	}	
 	this.getEngineImpulse = function(strValue) {
      		return this.engineImpulse;
 	}
@@ -111,13 +111,15 @@ function roverDataInit() {
 	this.setCommPort = function(strValue) {
 		console.log("setting comm port" + strValue);
 		this.comm = strValue;
-	};	
+	}	
 	this.getCommPort = function(strValue) {
      		return this.comm;
 	}
 	console.log ("done init");			
 	
 }
+
+
 var webPort = 8084;
 var robotData = new roverDataInit();
 var comPort = "/dev/tty.usbserial-A900fwHn";
@@ -152,53 +154,67 @@ var SerialPort = serialport.SerialPort; // localize object constructor
 */
 // this try is not catching the error and I am still working on the error event 
 
-	var sp = new SerialPort(robotData.getCommPort(), {
-	  	parser: serialport.parsers.readline(),
-  		baudrate: 9600,
-  		error: function( error, messsage) { 
-  			//console.log("error aaa" + err + "\n" + "message" + message);ß
-  		}
-	});
+function messagesError (msg) {
+	console.log ("\nThere was an error with Serial Port");
+	console.log (msg);
+	console.log ("Exiting...");
+	//process.exit(1);
+}
+
+var sp = new SerialPort(	
+		robotData.getCommPort(), 
+		{
+  			parser: serialport.parsers.readline(),
+				baudrate: 9600,
+ 
+},{},
+messagesError);
   
 
 
- sp.on("open", function () {
-    sp.write(0x80);
-    sp.write('123456\r');
-    console.log ("comm port ready");
-    
+sp.on("open", function (error) {
+
+	console.log ("alex was here");
+	if ( error ) {
+    console.log('failed to open: '+error);
+    process.exit(1);
+  }
+  else {
+    console.log('open');
+  }
+
+  sp.write(0x80);
+  sp.write('123456\r');
+  console.log ("comm port ready");    
 }); 
 
 
 // create the webservice listener on the webport 
 // for local testing localhost:webport/index.html
 my_http.createServer(function(request,response) {  
- 	// parsing paths requested helps give html response
+// parsing paths requested helps give html response
 
-    var my_path = url.parse(request.url).pathname;  
-    var full_path = path.join(process.cwd(),my_path);  
+	var my_path = url.parse(request.url).pathname;  
+	var full_path = path.join(process.cwd(),my_path);  
 	
-    path.exists(full_path,function(exists) {  
-
-    	console.log("test -> ");
-    
-       	if(!exists) {  
-           		response.writeHeader(404, {"Content-Type": "text/plain"});    
-           		response.write("404 Not Found\n");    
-           		response.end();  
-       	}  
-       	else {             		
-       		filesys.readFile(full_path,  function(err, file) {    
-           		if(err) {    
-                    response.writeHeader(500, {"Content-Type": "text/plain"});    
-           			response.write("please select a project\n");    
-                    response.write("The is the base directory for all.\n");    
-                    response.end();    
-                 }    
-                 else {  
+	path.exists(full_path,function(exists) {  
+	  console.log("test -> ");
+	  if(!exists) {  
+	  	response.writeHeader(404, {"Content-Type": "text/plain"});    
+	    response.write("404 Not Found\n");    
+	    response.end();  
+	  }  
+	  else {             		
+	    filesys.readFile(full_path,  function(err, file) {    
+	      if(err) {    
+	        response.writeHeader(500, {"Content-Type": "text/plain"});    
+	        response.write("please select a project\n");    
+	        response.write("The is the base directory for all.\n");    
+	        response.end();    
+	      }    
+	      else {  
 					var _get = url.parse(request.url, true).query; 
-                    response.writeHeader(200);    
-			
+	        response.writeHeader(200);    
 					if (_get.roverData  && !_get.direction) {
 						console.log("\n");	
 						var sendToBrowser = JSON.stringify(robotData);
@@ -207,47 +223,46 @@ my_http.createServer(function(request,response) {
 					}						
 					else if (_get.engineUpDate) {
 						if (_get.engineUpDate == "left") {
-							robotData.setEngineLeft(_get.engine);
+									robotData.setEngineLeft(_get.engine);
 						}
 						else if (_get.engineUpDate == "power"){
-							robotData.setEngineImpulse(_get.engine);	
+								robotData.setEngineImpulse(_get.engine);	
 						}
 						else {
-							robotData.setEngineRight(_get.engine);
+								robotData.setEngineRight(_get.engine);
 						}
 						var sendToBrowser = JSON.stringify(robotData);
 						response.write (sendToBrowser);
 					}
 					else if (!_get.stopevent  && _get.direction && !_get.roverData) {
-						//console.log("direction request");
-						robotData.setLastCommand(_get.direction);
-						var sendToBrowser = JSON.stringify(robotData);
-						response.write (sendToBrowser);
+							//console.log("direction request");
+							robotData.setLastCommand(_get.direction);
+							var sendToBrowser = JSON.stringify(robotData);
+							response.write (sendToBrowser);
 					}
 					else if (_get.stopevent == 1) {
-						//console.log("stop event");
-						robotData.setLastCommand("stop")
-						var sendToBrowser = JSON.stringify(robotData );
-						response.write (sendToBrowser);
+							//console.log("stop event");
+							robotData.setLastCommand("stop")
+							var sendToBrowser = JSON.stringify(robotData );
+							response.write (sendToBrowser);
 					}
 					else {
-						response.write(file);
+							response.write(file);
 					}
 					response.end();  
-                }  
-                       
-            });  
-       	}  
-    });  
+	   		}            
+	    });  
+	  }  
+	});  
 
- 	sp.on('data', function (arduinoData) {
+	sp.on('data', function (arduinoData) {
 
  		//console.log("\n\n\n----\ntest serial from Arduino \n------ \n\n\n")
 		if (arduinoData.length < 2) {
 			return;
 		}
-    	var ArduinoString = arduinoData.toString();
-		var re = /(ALERT|Rover|data|radar|ready4cmd)/i;
+    		var ArduinoString = arduinoData.toString();
+		var re = /(ALERT|Rover|data|radar|ready6cmd)/i;
 		var match = re.exec(ArduinoString);
 		//console.log ("data recieved ->" + ArduinoString + "<- aaa ");
 		//console.log ("data recieved ->" + arduinoData + "<- aaa ");
@@ -288,7 +303,7 @@ my_http.createServer(function(request,response) {
 		}
 		match = "";
 
-  	});
+  });
  	request.on('end', function () { 
 		var _get = url.parse(request.url, true).query; 		
 		var sendToArduino = "";	

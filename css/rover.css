@@ -11,10 +11,14 @@
 
 #forward, #back, #stop {
 	left:152;
+	border:3;
+	border-color: black;
 }
 
 #left, #status1, #status3 {
 	left:0;
+	border:3;
+	border-style: solid;;
 }
 #forward, #status1, #status2  {
 	top:0;
@@ -33,7 +37,7 @@
 }
 
 #status1, #status2, #status3, #status4 {
-	border:0;
+	border:33;
 	font-size:1.4em;
 	font-weight:bold;
 	margin-bottom:0;
@@ -51,11 +55,12 @@
 #status4 {
 		text-align: right;
 		font-size:1.2em;
-
+		border-style: solid;
+		border:2px;
 }
 
 #enginebox {
-	border:4px solid;
+	border:8px solid;
 	text-align:center;
 	top:50;
 	left:500;

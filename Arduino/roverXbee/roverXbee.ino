@@ -210,7 +210,7 @@ boolean checkForCommands () {
   }
   robot.lastCommand = commandString;
   //commandString.toLowerCase();
- //Serial.println(commandString);
+  //Serial.println(commandString);
      int testForEngine = commandString.indexOf("engineleft:");
      if (testForEngine != -1) {  
        String dataT = commandString.substring(commandString.indexOf(":") + 1);
@@ -322,6 +322,7 @@ void radarSweep () {
   sendRadarData();
   delay(200);
   Serial.println("ready4cmd");
+  delay(200);
 }
 
 void setDefaults () {

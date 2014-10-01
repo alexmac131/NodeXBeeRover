@@ -146,7 +146,6 @@ $(function() {
 
   /* changes the colours to active  */
   function changeIndicator (idset, locationImg) {
-
   	if (idsetPrev) {
   		$(idsetPrev).attr('src',locationImgPrev);
   	}	
@@ -170,11 +169,17 @@ $(function() {
   }
 
   function askForDataFromNode(data) {
+    console.log("aaaa ask for data " );
+    console.log (data);
   	var str = $.param(data);
-  	loadXMLDoc("index.html?" + str ,function() {
-    	if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-    		processFeedBack($.parseJSON(xmlhttp.responseText)) ;
-      }
+    console.log (str.legnth);
+
+  	loadXMLDoc("index.html?" + str , function() {
+        console.log (xmlhttp);
+
+      	if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+    		  processFeedBack($.parseJSON(xmlhttp.responseText)) ;
+        }
     });
   }
 
